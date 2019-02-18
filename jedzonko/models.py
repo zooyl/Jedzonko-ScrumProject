@@ -5,23 +5,26 @@ class jedzonko_page(models.Model):
     description=models.TextField()
     slug=models.CharField(max_length=255)
 
+
 class jedzonko_recipe(models.Model):
     name=models.CharField(max_length=255)
     ingredients=models.TextField()
     description=models.TextField()
-    created=models.DateTimeField(auto_now_add=True)
-    updated=models.DateTimeField(auto_now_add=True)
+    created=models.DateField(auto_now_add=True)
+    updated=models.DateField(auto_now_add=True)
     preparation_time=models.IntegerField()
     votes=models.IntegerField()
+
 
 class jedzonko_dayname(models.Model):
     day_name=models.CharField(max_length=16)
     order=models.IntegerField()
 
+
 class jedzonko_plan(models.Model):
     name=models.CharField(max_length=255)
     description=models.TextField()
-    created=models.DateTimeField()
+    created=models.DateField()
 
 
 class jedzonko_recipeplan(models.Model):
