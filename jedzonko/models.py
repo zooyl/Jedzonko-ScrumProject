@@ -9,8 +9,8 @@ class jedzonko_recipe(models.Model):
     name=models.CharField(max_length=255)
     ingredients=models.TextField()
     description=models.TextField()
-    created=models.DateField(auto_now_add=True)
-    updated=models.DateField(auto_now_add=True)
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateTimeField(auto_now_add=True)
     preparation_time=models.IntegerField()
     votes=models.IntegerField()
 
@@ -21,7 +21,7 @@ class jedzonko_dayname(models.Model):
 class jedzonko_plan(models.Model):
     name=models.CharField(max_length=255)
     description=models.TextField()
-    created=models.DateField()
+    created=models.DateTimeField(auto_now_add=True)
 
 class jedzonko_recipeplan(models.Model):
     meal_name=models.CharField(max_length=255)
