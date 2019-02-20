@@ -10,8 +10,8 @@ class Recipe(models.Model):
     name=models.CharField(max_length=255)
     ingredients=models.TextField()
     description=models.TextField()
-    created=models.DateField(auto_now_add=True)
-    updated=models.DateField(auto_now_add=True)
+    created=models.DateTimeField(auto_now_add=True)
+    updated=models.DateTimeField(auto_now_add=True)
     preparation_time=models.IntegerField()
     votes=models.IntegerField()
 
