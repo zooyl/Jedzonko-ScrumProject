@@ -1,7 +1,7 @@
 from datetime import datetime
-from jedzonko.models import jedzonko_dayname,jedzonko_recipe,jedzonko_plan,jedzonko_page,jedzonko_recipeplan
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from jedzonko.models import JedzonkoPlan
 
 
 class IndexView(View):
@@ -10,24 +10,13 @@ class IndexView(View):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
-def main(request):
 
-def land(request):
+class PlanAdd(View):
+    def get(self, request):
+        return render(request, 'app-add-schedules.html')
 
-def recipe(request):
-
-def recipe_list(request):
-
-def add_recipe(request):
-
-def edit_recipe(request):
-
-def plan(request):
-
-def add_plan(request):
-
-def add_details_plan(request):
-
-def contact(request):
-
-def about(request):
+    def post(self, request):
+        plan_name = request.POST['plan_name']
+        description = request.POST['description']
+        JedzonkoPlan.objects.create(name=plan_name, description=description)
+        return redirect('/plan/add/details')

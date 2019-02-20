@@ -14,13 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from jedzonko.views import IndexView, PlanAdd
 from django.urls import path,re_path
-#from jedzonko.views import main,land,recipe,recipe_list,add_recipe,edit_recipe,plan,add_plan,add_details_plan,contact,about
-from jedzonko.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
+    path('plan/add', PlanAdd.as_view()),
     re_path(r'$',),
     re_path(r'main/$',),
     re_path(r'recipe/(\d)*',),
@@ -28,7 +28,6 @@ urlpatterns = [
     re_path(r'recipe/add/$',),
     re_path(r'recipe/modify/$',),
     re_path(r'plan/(\d)*',),
-    re_path(r'plan/add',),
     re_path(r'plan/add/details/$',),
     re_path(r'contact/$',),
     re_path(r'about',),
