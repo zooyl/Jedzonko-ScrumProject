@@ -1,8 +1,4 @@
 from django.db import models
-import psycopg2
-import pytz
-
-from django.db import models
 
 days = (
     (0, 'Poniedzialek'),
@@ -23,9 +19,10 @@ class JedzonkoRecipe(models.Model):
     updated = models.TimeField(auto_now_add=True)
     preparation_time = models.IntegerField()
     votes = models.IntegerField(null=True)
+    way_of_preparing = models.TextField(null=True)
 
     def __str__(self):
-        return f'{self.id},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
+        return f'{self.pk},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
             f'{self.preparation_time},{self.votes}'
 
 

@@ -16,10 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from jedzonko.views import IndexView, Random
+from jedzonko.views import IndexView
+from jedzonko.views import Randomize
+from jedzonko.views import Form
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
-    path('/', Random),
+    path('', Randomize.as_view()),
+    path('recipe/add', Form.as_view()),
 ]
