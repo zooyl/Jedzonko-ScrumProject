@@ -12,6 +12,9 @@ class IndexView(View):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
+def index(request):
+    return render(request,'index.html')
+
 
 def main(request):
     return render(request, 'dashboard.html')
@@ -23,6 +26,7 @@ def plan(request):
 
 def list(request):
     return render(request, 'app-recipes.html')
+
 
 
 def contact(request):
