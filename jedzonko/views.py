@@ -3,27 +3,34 @@ from django.shortcuts import render, redirect
 from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe
-      
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
 class IndexView(View):
 
     def get(self, request):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
+
 def main(request):
-    return render(request,'dashboard.html')
+    return render(request, 'dashboard.html')
+
 
 def plan(request):
-    return render(request,'app-schedules.html')
+    return render(request, 'app-schedules.html')
+
 
 def list(request):
-    return render(request,'app-recipes.html')
+    return render(request, 'app-recipes.html')
+
 
 def contact(request):
-    return render(request,'contact.html')
+    return render(request, 'contact.html')
+
 
 def about(request):
-    return render(request,'about.html')
+    return render(request, 'about.html')
 
 
 class PlanAdd(View):
@@ -31,12 +38,12 @@ class PlanAdd(View):
         return render(request, 'app-add-schedules.html')
 
     def post(self, request):
-        plan_name = request.POST['plan_name']
-        description = request.POST['description']
+        plan_name = request.POST.get('plan_name')
+        description = request.POST.get('description')
         JedzonkoPlan.objects.create(name=plan_name, description=description)
         return redirect('/plan/add/details')
 
-      
+
 class Randomize(View):
 
     def get(self, request):
@@ -56,9 +63,6 @@ class Randomize(View):
 
 
 class Form(View):
-    def add_recipe(self):
-        pass
-
     def get(self, request):
         return render(request, 'app-add-recipe.html', )
 
@@ -68,23 +72,35 @@ class Form(View):
         preparing_time = request.POST.get('preparing_time')
         way_of_preparing = request.POST.get('way_of_preparing')
         ingedients = request.POST.get('ingredients')
-        if None in (name, description, preparing_time, way_of_preparing, ingedients):
+        if '' in (name, description, preparing_time, way_of_preparing, ingedients):
             ctx = {
-                'message' : 'Uzupelnij pola'
+                'message': 'Uzupelnij pola'
             }
             return render(request, 'app-add-recipe.html', ctx)
+        JedzonkoRecipe.objects.create(name=name, description=description, ingredients=ingedients,
+                                      preparation_time=preparing_time, way_of_preparing=way_of_preparing)
+        ctx = {
+            'message': 'Przepis zapisany'
+        }
+        return render(request, 'recipes.html', ctx)
 
 
-'''Po wejściu na stronę `/recipe/add` metodą GET powininen pojawić się formularz, w którym można dodać nowy przepis.
+class RecipesList(View):
+    def get(self, request):
+        sorting = JedzonkoRecipe.objects.all().order_by('name')
+        paginator = Paginator(sorting, 50)
+        page = request.GET.get('page', 1)
+        try:
+            users = paginator.page(page)
+        except PageNotAnInteger:
+            users = paginator.page(1)
+        except EmptyPage:
+            users = paginator.page(paginator.num_pages)
+        ctx = {
+            'sorting': sorting,
+            'users': users
+        }
+        return render(request, 'recipes.html', ctx)
 
-Pola formularza:
-
-- nazwa przepisu (pole typu text),
-- opis przepisu (pole typu text),
-- czas przygotowania w minutach (pole typu number),
-- sposób przygotowania (pole typu textarea),
-- składniki (pole typu textarea).
-
-Formularz musi posiadać przycisk „wyślij”, po naciśnięciu którego ma zostać wysłany metodą POST na stronę `/recipe/add`.
-
-Należy dodać odpowiedni wpis w pliku urls.py'''
+    def post(self, request):
+        return render(request, 'recipes.html')
