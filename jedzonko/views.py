@@ -22,6 +22,7 @@ def plan(request):
 def list(request):
     return render(request,'app-recipes.html')
 
+
 def contact(request):
     return render(request,'contact.html')
 
