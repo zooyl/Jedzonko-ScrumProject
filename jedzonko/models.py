@@ -1,35 +1,53 @@
 from django.db import models
-
-class jedzonko_page(models.Model):
-    title=models.CharField(max_length=255)
-    description=models.TextField()
-    slug=models.CharField(max_length=255)
+from datetime import datetime
 
 
-class jedzonko_recipe(models.Model):
-    name=models.CharField(max_length=255)
-    ingredients=models.TextField()
-    description=models.TextField()
-    created=models.DateField(auto_now_add=True)
-    updated=models.DateField(auto_now_add=True)
-    preparation_time=models.IntegerField()
-    votes=models.IntegerField()
+days = (
+    (0, 'Poniedzialek'),
+    (1, 'Wtorek'),
+    (2, 'Sroda'),
+    (3, 'Czwartek'),
+    (4, 'Piatek'),
+    (5, 'Sobota'),
+    (6, 'Niedziela'),
+)
 
 
-class jedzonko_dayname(models.Model):
-    day_name=models.CharField(max_length=16)
-    order=models.IntegerField()
+class JedzonkoRecipe(models.Model):
+    name = models.CharField(max_length=255)
+    ingredients = models.TextField()
+    description = models.TextField(null=True)
+    created = models.TimeField(auto_now_add=True)
+    updated = models.TimeField(auto_now_add=True)
+    preparation_time = models.IntegerField()
+    votes = models.IntegerField(null=True)
+    way_of_preparing = models.TextField(null=True)
+
+    def __str__(self):
+        return f'{self.id},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
+            f'{self.preparation_time},{self.votes}'
 
 
-class jedzonko_plan(models.Model):
-    name=models.CharField(max_length=255)
-    description=models.TextField()
-    created=models.DateField()
+class JedzonkoPlan(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    created = models.DateField(auto_now_add=True)
 
 
-class jedzonko_recipeplan(models.Model):
-    meal_name=models.CharField(max_length=255)
-    order=models.IntegerField()
-    day_name_id=models.ForeignKey(jedzonko_dayname,on_delete=models.CASCADE)
-    plan_id=models.ForeignKey(jedzonko_plan,on_delete=models.CASCADE)
-    recipe_id=models.ForeignKey(jedzonko_recipe,on_delete=models.CASCADE)
+class JedzonkoDayname(models.Model):
+    day_name = models.IntegerField(choices=days)
+    order = models.IntegerField(null=True)
+
+
+class JedzonkoRecipeplan(models.Model):
+    meal_name = models.CharField(max_length=255)
+    order = models.IntegerField()
+    day_name_id = models.ForeignKey(JedzonkoDayname, on_delete=models.DO_NOTHING)
+    plan_id = models.ForeignKey(JedzonkoPlan, on_delete=models.DO_NOTHING)
+    recipe_id = models.ForeignKey(JedzonkoRecipe, on_delete=models.DO_NOTHING)
+
+
+class JedzonkoPage(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+slug = models.SlugField(max_length=255)
