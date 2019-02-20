@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 days = (
     (0, 'Poniedzialek'),
@@ -22,14 +23,14 @@ class JedzonkoRecipe(models.Model):
     way_of_preparing = models.TextField(null=True)
 
     def __str__(self):
-        return f'{self.pk},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
+        return f'{self.id},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
             f'{self.preparation_time},{self.votes}'
 
 
 class JedzonkoPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
-    created = models.TimeField(auto_created=True)
+    created = models.DateField(auto_now_add=True)
 
 
 class JedzonkoDayname(models.Model):
@@ -48,4 +49,5 @@ class JedzonkoRecipeplan(models.Model):
 class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    slug = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255)
+
