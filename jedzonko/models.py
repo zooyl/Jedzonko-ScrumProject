@@ -24,7 +24,7 @@ class Day_name(models.Model):
 class Plan(models.Model):
     name=models.CharField(max_length=255)
     description=models.TextField()
-    created=models.DateField()
+    created=models.DateTimeField()
 
 
 class Recipe_plan(models.Model):
