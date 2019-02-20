@@ -5,7 +5,6 @@ class jedzonko_page(models.Model):
     description=models.TextField()
     slug=models.CharField(max_length=255)
 
-
 class jedzonko_recipe(models.Model):
     name=models.CharField(max_length=255)
     ingredients=models.TextField()
@@ -15,17 +14,14 @@ class jedzonko_recipe(models.Model):
     preparation_time=models.IntegerField()
     votes=models.IntegerField()
 
-
 class jedzonko_dayname(models.Model):
     day_name=models.CharField(max_length=16)
     order=models.IntegerField()
-
 
 class jedzonko_plan(models.Model):
     name=models.CharField(max_length=255)
     description=models.TextField()
     created=models.DateField()
-
 
 class jedzonko_recipeplan(models.Model):
     meal_name=models.CharField(max_length=255)
