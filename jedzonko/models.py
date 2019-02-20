@@ -20,6 +20,7 @@ class JedzonkoRecipe(models.Model):
     updated = models.TimeField(auto_now_add=True)
     preparation_time = models.IntegerField()
     votes = models.IntegerField(null=True)
+    way_of_preparing = models.TextField(null=True)
 
     def __str__(self):
         return f'{self.id},{self.name},{self.ingredients},{self.description}, {self.created}, {self.updated},' \
@@ -48,4 +49,4 @@ class JedzonkoRecipeplan(models.Model):
 class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    slug = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255)
