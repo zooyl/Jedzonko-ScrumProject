@@ -27,6 +27,7 @@ class jedzonko_plan(models.Model):
     created=models.DateField()
 
 
+
 class jedzonko_recipeplan(models.Model):
     meal_name=models.CharField(max_length=255)
     order=models.IntegerField()
