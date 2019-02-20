@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 days = (
     (0, 'Poniedzialek'),
     (1, 'Wtorek'),
@@ -50,4 +51,3 @@ class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     slug = models.SlugField(max_length=255)
-
