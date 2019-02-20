@@ -23,6 +23,7 @@ class Plan(models.Model):
     description=models.TextField()
     created=models.DateTimeField(auto_now_add=True)
 
+
 class Recipe_plan(models.Model):
     meal_name=models.CharField(max_length=255)
     order=models.IntegerField()
