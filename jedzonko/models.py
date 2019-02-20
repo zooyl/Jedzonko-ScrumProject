@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 days = (
     (0, 'Poniedzialek'),
     (1, 'Wtorek'),
