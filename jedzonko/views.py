@@ -104,3 +104,7 @@ class RecipesList(View):
 
     def post(self, request):
         return render(request, 'recipes.html')
+
+class PlanDetails(View):
+    def get(self, request):
+        pass

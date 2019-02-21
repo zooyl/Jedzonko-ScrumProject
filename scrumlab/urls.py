@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 from jedzonko.views import main, about, contact, list, \
     plan  # ,land,recipe,recipe_list,add_recipe,edit_recipe,plan,add_plan,add_details_plan,contact,about
-from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList
+from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList, PlanDetails
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +30,7 @@ urlpatterns = [
     # re_path(r'recipe/modify/$',),
     # re_path(r'plan/(\d)*', plan),
     re_path(r'plan/add', PlanAdd.as_view()),
-    # re_path(r'plan/add/details/$',),
+    # re_path(r'plan/add/details/$', PlanDetails.as_wiev()),
     re_path(r'contact/$', contact),
     re_path(r'about', about),
     path('', Randomize.as_view()),
