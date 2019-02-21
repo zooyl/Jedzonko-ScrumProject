@@ -15,26 +15,25 @@ Including another URLconf
 """
 from django.contrib import admin
 
-from django.urls import path,re_path
-from jedzonko.views import index,main,about,contact,list,plan#,land,recipe,recipe_list,add_recipe,edit_recipe,plan,add_plan,add_details_plan,contact,about
-from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList
+from django.urls import path, re_path
+from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList, recipe_details
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
 
-    re_path(r'$',index),
-    re_path(r'main/$',main),
-    # re_path(r'recipe/(\d)*',),
-    re_path(r'recipe/list/$', list),
+    # re_path(r'$',index),
+    # re_path(r'main/$',main),
+    # re_path(r'recipe/list/$', list),
     # re_path(r'recipe/add/$',),
     # re_path(r'recipe/modify/$',),
     # re_path(r'plan/(\d)*', plan),
     re_path(r'plan/add', PlanAdd.as_view()),
     # re_path(r'plan/add/details/$',),
-    re_path(r'contact/$', contact),
-    re_path(r'about', about),
+    # re_path(r'contact/$', contact),
+    # re_path(r'about', about),
     path('', Randomize.as_view()),
     path('recipe/add', Form.as_view()),
-    path('plan/list', RecipesList.as_view())
+    path('plan/list', RecipesList.as_view()),
+    path('recipe/', recipe_details),
 ]
