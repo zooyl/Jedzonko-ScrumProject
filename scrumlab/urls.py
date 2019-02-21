@@ -18,7 +18,6 @@ from django.urls import path
 from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList, recipe_details, \
     main, about, contact, lista_przepisow
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),

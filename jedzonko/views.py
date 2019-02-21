@@ -19,6 +19,7 @@ def main(request):
     return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p})
 
 
+
 def plan(request):
     return render(request, 'app-schedules.html')
 
@@ -87,6 +88,7 @@ class Form(View):
         return render(request, 'recipes.html', ctx)
 
 
+
 class RecipesList(View):
 
     def get(self, request):
@@ -109,8 +111,12 @@ class RecipesList(View):
         return render(request, 'recipes.html')
 
 
+class PlanDetails(View):
+    def get(self, request):
+        pass
+
+
 def recipe_details(request):
     recipe = JedzonkoRecipe.objects.latest('id')
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
-
 
