@@ -109,6 +109,8 @@ class Recipes(View):
 class PlanDetails(View):
     def get(self, request):
         pass
+    def post(self, request):
+        pass
 
 
 def recipe_details(request):
