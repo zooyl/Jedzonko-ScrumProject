@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe
@@ -24,8 +24,8 @@ def plan(request):
     return render(request, 'app-schedules.html')
 
 
-def lista_przepisow(request):
-    return render(request, 'app-recipes.html')
+def lista_planow(request):
+    return render(request, 'app-schedules.html')
 
 
 def contact(request):
@@ -44,7 +44,8 @@ class PlanAdd(View):
         plan_name = request.POST.get('plan_name')
         description = request.POST.get('description')
         JedzonkoPlan.objects.create(name=plan_name, description=description)
-        return redirect('/plan/add/details')
+        finish = "Plan dodany"
+        return render(request, 'app-add-schedules.html', {'finish': finish})
 
 
 class Randomize(View):
@@ -85,7 +86,7 @@ class Form(View):
         ctx = {
             'message': 'Przepis zapisany'
         }
-        return render(request, 'recipes.html', ctx)
+        return render(request, 'app-add-recipe.html', ctx)
 
 
 
