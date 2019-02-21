@@ -12,29 +12,22 @@ class IndexView(View):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
-# def index(request):
-#     return render(request,'index.html')
-#
-#
-# def main(request):
-#     return render(request, 'dashboard.html')
-#
-#
-# def plan(request):
-#     return render(request, 'app-schedules.html')
-#
-#
-# def list(request):
-#     return render(request, 'app-recipes.html')
-#
-#
-#
-# def contact(request):
-#     return render(request, 'contact.html')
-#
-#
-# def about(request):
-#     return render(request, 'about.html')
+
+def main(request):
+    return render(request, 'dashboard.html')
+
+def plan(request):
+    return render(request, 'app-schedules.html')
+
+def lista_przepisow(request):
+    return render(request, 'app-recipes.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
+def about(request):
+    return render(request, 'about.html')
+
 
 
 class PlanAdd(View):
@@ -89,7 +82,8 @@ class Form(View):
         return render(request, 'recipes.html', ctx)
 
 
-class RecipesList(View):
+class Recipes
+(View):
     def get(self, request):
         sorting = JedzonkoRecipe.objects.all().order_by('name')
         paginator = Paginator(sorting, 50)
@@ -113,3 +107,11 @@ class RecipesList(View):
 def recipe_details(request):
     recipe = JedzonkoRecipe.objects.latest('id')
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
+
+def ilosc_r(request):
+    ilosc=JedzonkoPlan.objects.count()
+    return render(request,'dashboard.html',{'ilosc_r':ilosc})
+
+def ilosc_p(request):
+    ilosc=JedzonkoRecipe.objects.count()
+    return render(request,'dashboard.html',{'ilosc_p':ilosc})
