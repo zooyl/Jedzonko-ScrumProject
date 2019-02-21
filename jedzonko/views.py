@@ -113,3 +113,4 @@ def recipe_details(request):
     recipe = JedzonkoRecipe.objects.latest('id')
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
 
+
