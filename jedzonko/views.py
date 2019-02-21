@@ -15,26 +15,21 @@ class IndexView(View):
 def index(request):
     return render(request,'index.html')
 
-
 def main(request):
     return render(request, 'dashboard.html')
-
 
 def plan(request):
     return render(request, 'app-schedules.html')
 
-
 def list(request):
     return render(request, 'app-recipes.html')
-
-
 
 def contact(request):
     return render(request, 'contact.html')
 
-
 def about(request):
     return render(request, 'about.html')
+
 
 
 class PlanAdd(View):
@@ -108,3 +103,11 @@ class RecipesList(View):
 
     def post(self, request):
         return render(request, 'recipes.html')
+
+def ilosc_r(request):
+    ilosc=JedzonkoPlan.objects.count()
+    return render(request,'dashboard.html',{'ilosc_r':ilosc})
+
+def ilosc_p(request):
+    ilosc=JedzonkoRecipe.objects.count()
+    return render(request,'dashboard.html',{'ilosc_p':ilosc})
