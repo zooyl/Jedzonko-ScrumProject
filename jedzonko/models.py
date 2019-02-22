@@ -31,7 +31,7 @@ class JedzonkoRecipe(models.Model):
 class JedzonkoPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
-    created = models.DateField(auto_now_add=True)
+    created = models.TimeField(auto_now_add=True)
 
 
 class JedzonkoDayname(models.Model):
@@ -50,4 +50,4 @@ class JedzonkoRecipeplan(models.Model):
 class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, null=True)
