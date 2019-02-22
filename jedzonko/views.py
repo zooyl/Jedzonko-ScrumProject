@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoPage
@@ -102,7 +102,7 @@ class Form(View):
 class RecipesList(View):
 
     def get(self, request):
-        sorting = JedzonkoRecipe.objects.all().order_by('name')
+        sorting = JedzonkoRecipe.objects.all().order_by('-votes')
         paginator = Paginator(sorting, 50)
         page = request.GET.get('page', 1)
         try:
@@ -123,6 +123,12 @@ class RecipesList(View):
 
 def recipe_details(request, id):
     recipe = JedzonkoRecipe.objects.get(id=id)
+    if request.method == "POST":
+        if request.POST.get('like'):
+            recipe.votes += 1
+        else:
+            recipe.votes -= 1
+    recipe.save()
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
 
 
@@ -155,3 +161,8 @@ class Modify(View):
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-recipe.html', {'recipe': recipe, 'finish': finish})
 
+
+def del_recipe(request, id):
+    recipe = JedzonkoRecipe.objects.get(id=id)
+    recipe.delete()
+    return redirect('/recipe/list')
