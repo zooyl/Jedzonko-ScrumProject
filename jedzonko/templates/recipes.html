@@ -22,20 +22,20 @@
             Zaplanuj <span>Jedzonko</span>
         </a>
         <ul class="nav nounderline text-uppercase">
+{#            <li class="nav-item ml-4">#}
+{#                <a class="nav-link color-header" href="login.html">logowanie</a>#}
+{#            </li>#}
+{#            <li class="nav-item ml-4">#}
+{#                <a class="nav-link color-header" href="registration.html">rejestracja</a>#}
+{#            </li>#}
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="login.html">logowanie</a>
+                <a class="nav-link" href="/about">o aplikacji</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="registration.html">rejestracja</a>
+                <a class="nav-link disabled" href="">Przepisy</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link" href="/#about">o aplikacji</a>
-            </li>
-            <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="recipes.html">Przepisy</a>
-            </li>
-            <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="/#contact">Kontakt</a>
+                <a class="nav-link disabled" href="/contact">Kontakt</a>
             </li>
         </ul>
     </nav>
@@ -48,21 +48,25 @@
         <div class="orange-line w-100"></div>
     </div>
 </section>
-<section>
-    <button><a href="app-add-recipe.html">Nowy przepis</a></button>
-</section>
 <section class="mr-4 ml-4">
     <table class="table">
         <thead>
+        <tr class="d-flex text-color-darker">
+            <th scope="col" class="col-1">NR</th>
+            <th scope="col" class="col-5">NAZWA</th>
+            <th scope="col" class="col-5">OPIS</th>
+            <th scope="col" class="col-1">AKCJE</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-lighter">
         {% for recipe in sorting %}
             <tr class="d-flex">
                 <th scope="row" class="col-1">{{ forloop.counter }}</th>
                 <td class="col-5">
                     {{ recipe.name }}
                 </td>
-                <td clas="col-5"> {{ recipe.description }}
-                </td>
-                <td class="col-1"><a href="#" class="btn btn-info rounded-0 text-light">Szczegóły</a></td>
+                <td clas="col-5"> {{ recipe.description }}</td>
+                <td align="right" class="col-1"><a href="{{ recipe.id }}" class="btn btn-info rounded-0 text-light">Szczegóły</a></td>
             </tr>
         {% endfor %}
         </tbody>
