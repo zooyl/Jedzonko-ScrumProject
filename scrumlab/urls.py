@@ -29,5 +29,5 @@ urlpatterns = [
     path('', Randomize.as_view()),
     path('recipe/add/', Form.as_view()),
     path('recipe/list/', RecipesList.as_view()),
-    path('recipe/', recipe_details),
+    path('recipe/list/<int:id>', recipe_details),
 ]
