@@ -14,6 +14,7 @@
             </div>
         </div>
 
+
         <div class="schedules-content">
             <table class="table border-bottom">
                 <thead>
@@ -47,9 +48,15 @@
                     </tbody>
                 </table>
             </table>
-        </div>
-        <section>
-            <div class="pagination">
+
+            <div class="col d-flex justify-content-end mb-2 noPadding">
+                <a href="/plan/add"
+                   class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj
+                    plan</a>
+
+            </div>
+            <section>
+                <div class="pagination">
     <span class="step-links">
         {% if users.has_previous %}
             <a href="?page=1">&laquo;</a>
@@ -65,7 +72,7 @@
             <a href="?page={{ users.paginator.num_pages }}"> &raquo;</a>
         {% endif %}
     </span>
-            </div>
-        </section>
-    </div>
+                </div>
+            </section>
+        </div>
 {% endblock content %}

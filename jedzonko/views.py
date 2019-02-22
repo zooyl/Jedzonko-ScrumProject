@@ -2,8 +2,10 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.views import View
 import random
-from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days
+from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 
 
 class IndexView(View):
@@ -23,12 +25,26 @@ def plan(request):
     return render(request, 'app-schedules.html')
 
 
+# def lista_planow(request):
+#     return render(request, 'app-schedules.html')
+
+
 def contact(request):
-    return render(request, 'contact.html')
+    content = JedzonkoPage.objects.filter(slug="contact")
+    if content.exists():
+        return render(request, 'contact.html', {'content': content})
+    else:
+        empty = "Strona w przygotowaniu"
+        return render(request, 'contact.html', {'empty': empty})
 
 
 def about(request):
-    return render(request, 'about.html')
+    content = JedzonkoPage.objects.filter(slug="about")
+    if content.exists():
+        return render(request, 'about.html', {'content': content})
+    else:
+        empty = "Strona w przygotowaniu"
+        return render(request, 'about.html', {'empty': empty})
 
 
 class PlanAdd(View):
@@ -39,7 +55,8 @@ class PlanAdd(View):
         plan_name = request.POST.get('plan_name')
         description = request.POST.get('description')
         JedzonkoPlan.objects.create(name=plan_name, description=description)
-        return redirect('/plan/add/details')
+        finish = "Plan dodany"
+        return render(request, 'app-add-schedules.html', {'finish': finish})
 
 
 class Randomize(View):
@@ -80,7 +97,7 @@ class Form(View):
         ctx = {
             'message': 'Przepis zapisany'
         }
-        return render(request, 'recipes.html', ctx)
+        return render(request, 'app-add-recipe.html', ctx)
 
 
 class RecipesList(View):
@@ -166,10 +183,52 @@ class PlanDetails(View):
             'przepis': przepis
         }
         JedzonkoRecipeplan.objects.create(meal_name=name, order=order, recipe_id_id=recipe_name, day_name_id_id=day[0],
-                                          plan_id_id=y,)
+                                          plan_id_id=y, )
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
 
-def recipe_details(request):
-    recipe = JedzonkoRecipe.objects.latest('id')
+def recipe_details(request, id):
+    recipe = JedzonkoRecipe.objects.get(id=id)
+    if request.method == "POST":
+        if request.POST.get('like'):
+            recipe.votes += 1
+        else:
+            recipe.votes -= 1
+    recipe.save()
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
+
+
+class Modify(View):
+
+    def get(self, request, id):
+        try:
+            recipe = JedzonkoRecipe.objects.get(id=id)
+        except JedzonkoRecipe.DoesNotExist:
+            raise Http404("Taki przepis nie istnieje")
+        return render(request, 'app-edit-recipe.html', {'recipe': recipe})
+
+    def post(self, request, id):
+        recipe = JedzonkoRecipe.objects.get(id=id)
+        name = request.POST['name']
+        description = request.POST['description']
+        preparation_time = request.POST['preparation_time']
+        way_of_preparing = request.POST['way_of_preparing']
+        ingredients = request.POST['ingredients']
+        if '' in (name, description, preparation_time, way_of_preparing, ingredients):
+            warning = "Uzupelnij wszystkie pola"
+            return render(request, 'app-edit-recipe.html', {'recipe': recipe, 'warning': warning})
+        else:
+            recipe.name = name
+            recipe.description = description
+            recipe.preparation_time = preparation_time
+            recipe.way_of_preparing = way_of_preparing
+            recipe.ingredients = ingredients
+            recipe.save()
+            finish = "Przepis zaktualizowany"
+            return render(request, 'app-edit-recipe.html', {'recipe': recipe, 'finish': finish})
+
+
+def del_recipe(request, id):
+    recipe = JedzonkoRecipe.objects.get(id=id)
+    recipe.delete()
+    return redirect('/recipe/list')
