@@ -122,4 +122,8 @@ class RecipesList(View):
 
 def recipe_details(request, id):
     recipe = JedzonkoRecipe.objects.get(id=id)
+
+
+def recipe_details(request):
+    recipe = JedzonkoRecipe.objects.latest('id')
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
