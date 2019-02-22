@@ -4,6 +4,7 @@ from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoPage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 
 
 class IndexView(View):
@@ -123,3 +124,34 @@ class RecipesList(View):
 def recipe_details(request, id):
     recipe = JedzonkoRecipe.objects.get(id=id)
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
+
+
+class Modify(View):
+
+    def get(self, request, id):
+        try:
+            recipe = JedzonkoRecipe.objects.get(id=id)
+        except JedzonkoRecipe.DoesNotExist:
+            raise Http404("Taki przepis nie istnieje")
+        return render(request, 'app-edit-recipe.html', {'recipe': recipe})
+
+    def post(self, request, id):
+        recipe = JedzonkoRecipe.objects.get(id=id)
+        name = request.POST['name']
+        description = request.POST['description']
+        preparation_time = request.POST['preparation_time']
+        way_of_preparing = request.POST['way_of_preparing']
+        ingredients = request.POST['ingredients']
+        if '' in (name, description, preparation_time, way_of_preparing, ingredients):
+            warning = "Uzupelnij wszystkie pola"
+            return render(request, 'app-edit-recipe.html', {'recipe': recipe, 'warning': warning})
+        else:
+            recipe.name = name
+            recipe.description = description
+            recipe.preparation_time = preparation_time
+            recipe.way_of_preparing = way_of_preparing
+            recipe.ingredients = ingredients
+            recipe.save()
+            finish = "Przepis zaktualizowany"
+            return render(request, 'app-edit-recipe.html', {'recipe': recipe, 'finish': finish})
+
