@@ -22,20 +22,20 @@
             Zaplanuj <span>Jedzonko</span>
         </a>
         <ul class="nav nounderline text-uppercase">
+            {#            <li class="nav-item ml-4">#}
+            {#                <a class="nav-link color-header" href="login.html">logowanie</a>#}
+            {#            </li>#}
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="login.html">logowanie</a>
+                <a class="nav-link color-header" href="/main">pulpit</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="registration.html">rejestracja</a>
+                <a class="nav-link" href="/about">o aplikacji</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link" href="/#about">o aplikacji</a>
+                <a class="nav-link disabled" href="">Przepisy</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="recipes.html">Przepisy</a>
-            </li>
-            <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="/#contact">Kontakt</a>
+                <a class="nav-link disabled" href="/contact">Kontakt</a>
             </li>
         </ul>
     </nav>
@@ -48,21 +48,40 @@
         <div class="orange-line w-100"></div>
     </div>
 </section>
-<section>
-    <button><a href="app-add-recipe.html">Nowy przepis</a></button>
-</section>
 <section class="mr-4 ml-4">
+    <div class="col d-flex justify-content-end mb-4 noPadding">
+        <a href="/recipe/add"
+           class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Dodaj
+            przepis</a>
+    </div>
     <table class="table">
         <thead>
+        <tr class="d-flex text-color-darker">
+            <th scope="col" class="col-1">NR</th>
+            <th scope="col" class="col-2">NAZWA</th>
+            <th scope="col" class="col-3">POLUBIENIA</th>
+            <th scope="col" class="col-5">OPIS</th>
+            <th scope="col" class="col-1">AKCJE</th>
+        </tr>
+        </thead>
+        <tbody class="text-color-lighter">
         {% for recipe in sorting %}
             <tr class="d-flex">
                 <th scope="row" class="col-1">{{ forloop.counter }}</th>
-                <td class="col-5">
+                <td class="col-3">
                     {{ recipe.name }}
                 </td>
-                <td clas="col-5"> {{ recipe.description }}
+                <td class="col-2">
+                    {{ recipe.votes }}
                 </td>
-                <td class="col-1"><a href="#" class="btn btn-info rounded-0 text-light">Szczegóły</a></td>
+                <td class="col-4">
+                    {{ recipe.description }}
+                </td>
+                <td align="right" class="col-2">
+                    <a href="/recipe/{{ recipe.id }}" class="btn btn-info rounded-0 text-light">Szczegóły</a>
+                    <a href="/recipe/modify/{{ recipe.id }}" class="btn btn-warning rounded-0 text-light m-1">Edytuj</a>
+                    <a href="/recipe/delete/{{ recipe.id }}" class="btn btn-danger rounded-0 text-light m-1">Usuń</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

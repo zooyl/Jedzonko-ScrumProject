@@ -1,6 +1,4 @@
 from django.db import models
-from datetime import datetime
-
 
 days = (
     (0, 'Poniedzialek'),
@@ -18,9 +16,9 @@ class JedzonkoRecipe(models.Model):
     ingredients = models.TextField()
     description = models.TextField(null=True)
     created = models.TimeField(auto_now_add=True)
-    updated = models.TimeField(auto_now_add=True)
+    updated = models.TimeField(auto_now=True)
     preparation_time = models.IntegerField()
-    votes = models.IntegerField(null=True)
+    votes = models.IntegerField(default=0)
     way_of_preparing = models.TextField(null=True)
 
     def __str__(self):
@@ -50,4 +48,4 @@ class JedzonkoRecipeplan(models.Model):
 class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True)
