@@ -4,17 +4,19 @@
     <div class="dashboard-content border-dashed p-3 m-4 view-height">
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding">
-                <h3 class="color-header text-uppercase" >DODAJ PRZEPIS DO PLANU {{ nazwa_planu }}</h3>
+                <h3 class="color-header text-uppercase">DODAJ PRZEPIS DO PLANU {{ nazwa_planu }}</h3>
             </div>
-            <form action="#" method="POST">
-                 {% csrf_token %}
+                        <div class="col noPadding">
+                <h3>{{ message }}</h3>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="col d-flex justify-content-end mb-2 noPadding">
-                    <button type="'submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
+                    <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
                 </div>
         </div>
-        {{ message }}
-        <div class="schedules-content">
 
+        <div class="schedules-content">
             <div class="form-group row">
                 <div class="col-sm-3">
                     <input type="hidden" id="" name="" value="3487">

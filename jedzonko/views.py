@@ -2,8 +2,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.views import View
 import random
-from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage, JedzonkoDayname
-
+from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
@@ -16,13 +15,13 @@ class IndexView(View):
         return render(request, "test.html", ctx)
 
 
-
 def main(request):
-    ostatni=JedzonkoPlan.objects.all().latest('id')
-    cycki=JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
+    ostatni = JedzonkoPlan.objects.all().latest('id')
+    var = JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
     ilosc_r = JedzonkoPlan.objects.all().count()
     ilosc_p = JedzonkoRecipe.objects.all().count()
-    return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,'ostatni':ostatni,'cycki':cycki})
+    return render(request, 'dashboard.html',
+                  {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'var': var})
 
 
 def contact(request):
@@ -64,13 +63,16 @@ class Randomize(View):
         for v in var:
             if v.name is not None:
                 self.lista.append(v.id)
-        self.choose = random.sample(self.lista, 3)
-        for i in range(0, 3):
-            x = self.choose[i]
-            show_it = JedzonkoRecipe.objects.get(id=x)
-            ctx[f'title{i}'] = show_it.name
-            ctx[f'losuj{i}'] = show_it.description
-        return render(request, 'index.html', ctx)
+        if len(self.lista) < 3:
+            return redirect('/recipe/add')
+        else:
+            self.choose = random.sample(self.lista, 3)
+            for i in range(0, 3):
+                x = self.choose[i]
+                show_it = JedzonkoRecipe.objects.get(id=x)
+                ctx[f'title{i}'] = show_it.name
+                ctx[f'losuj{i}'] = show_it.description
+            return render(request, 'index.html', ctx)
 
 
 class Form(View):
@@ -139,15 +141,12 @@ class PlanList(View):
     def post(self, request):
         return render(request, 'app-schedules.html')
 
-def test(request):
-    return render(request, 'app-schedules-meal-recipe.html')
 
 class PlanDetails(View):
 
-    def get(self, request):
-        var = JedzonkoRecipe.objects.all().filter(pk=4)  # zamienic 4ke na zalezna od wyboru planu przez usera
-        for i in var:
-            y = i.name
+    def get(self, request, id):
+        var = JedzonkoPlan.objects.get(pk=id)
+        y = var.name
         przepis = JedzonkoRecipe.objects.all()
         ctx = {
             'nazwa_planu': y,
@@ -156,10 +155,9 @@ class PlanDetails(View):
         }
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
-    def post(self, request):
-        var = JedzonkoRecipe.objects.all().filter(pk=4)
-        for i in var:
-            y = i.id
+    def post(self, request, id):
+        var = JedzonkoPlan.objects.get(pk=id)
+        y = var.id
         przepis = JedzonkoRecipe.objects.all()
         name = request.POST.get('fname')
         order = request.POST.get('fnumber')
@@ -175,13 +173,14 @@ class PlanDetails(View):
             }
             return render(request, 'app-schedules-meal-recipe.html', ctx)
         ctx = {
-            'message': 'Przepis zapisany',
+            'message': 'Przepis dodany do planu',
             'nazwa_planu': y,
             'dzien': days,
             'przepis': przepis
         }
         dayd = ''.join(day)
-        creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day, recipe_id_id=recipe_name, plan_id_id=y)
+        creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day,
+                                                            recipe_id_id=recipe_name, plan_id_id=y)
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
 
@@ -194,6 +193,9 @@ def recipe_details(request, id):
             recipe.votes -= 1
     recipe.save()
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
+
+def test(request):
+    return render(request, 'app-edit-schedules.html')
 
 
 class Modify(View):
@@ -230,3 +232,9 @@ def del_recipe(request, id):
     recipe = JedzonkoRecipe.objects.get(id=id)
     recipe.delete()
     return redirect('/recipe/list')
+
+
+def del_plan(request, id):
+    plan = JedzonkoPlan.objects.get(id=id)
+    plan.delete()
+    return redirect('/plan/list')
