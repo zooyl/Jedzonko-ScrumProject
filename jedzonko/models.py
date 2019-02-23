@@ -10,7 +10,6 @@ days = (
     (6, 'Niedziela'),
 )
 
-
 class JedzonkoRecipe(models.Model):
     name = models.CharField(max_length=255)
     ingredients = models.TextField()

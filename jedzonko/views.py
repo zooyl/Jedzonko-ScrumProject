@@ -14,6 +14,7 @@ class IndexView(View):
         return render(request, "test.html", ctx)
 
 
+
 def main(request):
     ostatni=JedzonkoPlan.objects.all().latest('id')
     cycki=JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
