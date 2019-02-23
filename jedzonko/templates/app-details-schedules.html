@@ -43,12 +43,12 @@
                     <th class="col-4">Przepis</th>
                     <th class="col-2">Akcje</th>
                 </tr>
+
                 </thead>
-                {% for name in day %}
                     {% for i in schedule %}
                         <tbody class="text-color-lighter">
                         <tr class="d-flex">
-                            <th class="col-2">{{ name.1 }}</th>
+                            <th class="col-2">{{ forloop.counter }}</th>
                             <td class="col-2">{{ i.order }}</td>
                             <td class="col-2">{{ i.meal_name }}</td>
                             <td class="col-4">{{ i.recipe_id.name }}</td>
@@ -59,7 +59,6 @@
                                    class="btn btn-info rounded-0 text-light m-1">Szczegóły przepisu</a>
                         </tr>
                     {% endfor %}
-                {% endfor %}
                 </tbody>
             </table>
 

@@ -20,12 +20,14 @@ def main(request):
     check = JedzonkoPlan.objects.all()
     if check.exists():
         ostatni = JedzonkoPlan.objects.all().latest('id')
-        var = JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
-        # day = JedzonkoRecipeplan.objects.filter(day_name_id=)
         ilosc_p = JedzonkoPlan.objects.all().count()
         ilosc_r = JedzonkoRecipe.objects.all().count()
+        przpisy = []
+        dayz=['poniedziałek','wtorek','środa','czwartek','piątek','sobota','niedziela']
+        for day in range(7):
+            przpisy.append(JedzonkoRecipeplan.objects.filter(plan_id=ostatni, day_name=day))
         return render(request, 'dashboard.html',
-                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'var': var})
+                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'przpisy_dla_dnia': przpisy, 'dni':dayz})
     else:
         return render(request, 'dashboard.html')
 
@@ -270,6 +272,7 @@ def plan_details(request, id):
         return render(request, 'app-details-schedules.html', {'plan': plan, 'schedule': schedule, 'day': day})
     except ObjectDoesNotExist:
         raise Http404('Taki plan nie istnieje')
+
 
 
 class EditPlan(View):

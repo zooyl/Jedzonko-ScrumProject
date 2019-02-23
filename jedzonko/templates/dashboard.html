@@ -33,26 +33,27 @@
             </div>
         </div>
     </div>
+    
     <div class="m-4 p-4 border-dashed">
         <h2 class="dashboard-content-title">
             <span>Ostatnio dodany plan:</span> {{ostatni.name}}
         </h2>
-        {%for i in var%}
+        {%for przepisy in przpisy_dla_dnia%}
         <table class="table">
             <thead>
             <tr class="d-flex">
-                <th class="col-2">{{i.day_name_id.day_name}}</th>
+                <th class="col-2">Numer dnia tygodnia: {{forloop.counter}}</th>
                 <th class="col-8"></th>
                 <th class="col-2"></th>
             </tr>
             </thead>
             <tbody>
-            {%for j in var%}
+            {%for przepis in przepisy%}
             <tr class="d-flex">
-                <td class="col-2">{{j.meal_name}}</td>
-                <td class="col-8">{{j.recipe_id.name}}</td>
+                <td class="col-2">{{przepis.meal_name}}</td>
+                <td class="col-8">{{przepis.recipe_id.name}}</td>
                 <td class="col-2">
-                    <button type="button" class="btn btn-primary rounded-0">Szczegóły</button>
+                    <a class="btn btn-primary rounded-0" href="/recipe/{{przepis.id}}">Szczegóły</a>
                 </td>
             </tr>
             {%endfor%}
