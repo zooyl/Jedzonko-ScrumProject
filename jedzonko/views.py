@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
+from django.db import IntegrityError
 
 
 class IndexView(View):
@@ -16,12 +16,16 @@ class IndexView(View):
 
 
 def main(request):
-    ostatni = JedzonkoPlan.objects.all().latest('id')
-    var = JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
-    ilosc_r = JedzonkoPlan.objects.all().count()
-    ilosc_p = JedzonkoRecipe.objects.all().count()
-    return render(request, 'dashboard.html',
-                  {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'var': var})
+    check = JedzonkoPlan.objects.all()
+    if check.exists():
+        ostatni = JedzonkoPlan.objects.all().latest('id')
+        var = JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
+        ilosc_r = JedzonkoPlan.objects.all().count()
+        ilosc_p = JedzonkoRecipe.objects.all().count()
+        return render(request, 'dashboard.html',
+                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'var': var})
+    else:
+        return render(request, 'dashboard.html')
 
 
 def contact(request):
@@ -64,7 +68,7 @@ class Randomize(View):
             if v.name is not None:
                 self.lista.append(v.id)
         if len(self.lista) < 3:
-            return redirect('/recipe/add')
+            return render(request, 'index.html')
         else:
             self.choose = random.sample(self.lista, 3)
             for i in range(0, 3):
@@ -156,32 +160,35 @@ class PlanDetails(View):
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
     def post(self, request, id):
-        var = JedzonkoPlan.objects.get(pk=id)
-        y = var.id
-        przepis = JedzonkoRecipe.objects.all()
-        name = request.POST.get('fname')
-        order = request.POST.get('fnumber')
-        recipe_name = request.POST.get('frecipe')
-        day = request.POST.get('fday')
-        if '' in (var, name):
-            ctx = {
-                'message': 'Uzupelnij pola',
-                'nazwa_planu': y,
-                'przepis': przepis,
-                'dzien': days
+        try:
+            var = JedzonkoPlan.objects.get(pk=id)
+            y = var.id
+            przepis = JedzonkoRecipe.objects.all()
+            name = request.POST.get('fname')
+            order = request.POST.get('fnumber')
+            recipe_name = request.POST.get('frecipe')
+            day = request.POST.get('fday')
+            if '' in (name, order):
+                ctx = {
+                    'message': 'Uzupelnij pola',
+                    'nazwa_planu': y,
+                    'przepis': przepis,
+                    'dzien': days
 
+                }
+                return render(request, 'app-schedules-meal-recipe.html', ctx)
+            ctx = {
+                'message': 'Przepis dodany do planu',
+                'nazwa_planu': y,
+                'dzien': days,
+                'przepis': przepis
             }
+            dayd = ''.join(day)
+            creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day,
+                                                                recipe_id_id=recipe_name, plan_id_id=y)
             return render(request, 'app-schedules-meal-recipe.html', ctx)
-        ctx = {
-            'message': 'Przepis dodany do planu',
-            'nazwa_planu': y,
-            'dzien': days,
-            'przepis': przepis
-        }
-        dayd = ''.join(day)
-        creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day,
-                                                            recipe_id_id=recipe_name, plan_id_id=y)
-        return render(request, 'app-schedules-meal-recipe.html', ctx)
+        except IntegrityError:
+            return redirect('/recipe/add')
 
 
 def recipe_details(request, id):
@@ -194,8 +201,9 @@ def recipe_details(request, id):
     recipe.save()
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
 
+
 def test(request):
-    return render(request, 'app-edit-schedules.html')
+    return render(request, 'app-details-schedules.html')
 
 
 class Modify(View):
