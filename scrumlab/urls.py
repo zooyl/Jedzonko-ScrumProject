@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from jedzonko.views import IndexView, Randomize, Form, PlanAdd, RecipesList, recipe_details, \
+from jedzonko.views import IndexView, Form, PlanAdd, RecipesList, recipe_details, Randomize, \
     main, about, contact, Modify, del_recipe, PlanList, PlanDetails
 
 

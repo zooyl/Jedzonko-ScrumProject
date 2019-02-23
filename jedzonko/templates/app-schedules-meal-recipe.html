@@ -57,7 +57,7 @@
                 <div class="col-sm-2">
                     <select class="form-control" name="fday">
                         {% for i in dzien %}
-                            <option value={{ i }}>{{ i }}</option>
+                            <option value={{ i.0 }}>{{ i.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>

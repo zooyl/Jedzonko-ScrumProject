@@ -147,9 +147,9 @@ class PlanList(View):
 class PlanDetails(View):
 
     def get(self, request):
-        var = JedzonkoRecipeplan.objects.all().filter(pk=4)  # zamienic 4ke na zalezna od wyboru planu przez usera
+        var = JedzonkoRecipe.objects.all().filter(pk=4)  # zamienic 4ke na zalezna od wyboru planu przez usera
         for i in var:
-            y = i.meal_name
+            y = i.name
         przepis = JedzonkoRecipe.objects.all()
         ctx = {
             'nazwa_planu': y,
@@ -159,7 +159,7 @@ class PlanDetails(View):
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
     def post(self, request):
-        var = JedzonkoRecipeplan.objects.all().filter(pk=4)
+        var = JedzonkoRecipe.objects.all().filter(pk=4)
         for i in var:
             y = i.id
         przepis = JedzonkoRecipe.objects.all()
@@ -182,8 +182,8 @@ class PlanDetails(View):
             'dzien': days,
             'przepis': przepis
         }
-        JedzonkoRecipeplan.objects.create(meal_name=name, order=order, recipe_id_id=recipe_name, day_name_id_id=day[0],
-                                          plan_id_id=y, )
+        dayd = ''.join(day)
+        creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day, recipe_id_id=recipe_name, plan_id_id=y)
         return render(request, 'app-schedules-meal-recipe.html', ctx)
 
 
