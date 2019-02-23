@@ -10,7 +10,6 @@ days = (
     (6, 'Niedziela'),
 )
 
-
 class JedzonkoRecipe(models.Model):
     name = models.CharField(max_length=255)
     ingredients = models.TextField()
@@ -34,7 +33,7 @@ class JedzonkoPlan(models.Model):
 
 class JedzonkoDayname(models.Model):
     day_name = models.IntegerField(choices=days)
-    order = models.IntegerField(null=True)
+    order = models.IntegerField(blank=True)
 
 
 class JedzonkoRecipeplan(models.Model):

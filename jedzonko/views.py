@@ -2,7 +2,8 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.views import View
 import random
-from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage
+from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage, JedzonkoDayname
+
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
@@ -15,10 +16,13 @@ class IndexView(View):
         return render(request, "test.html", ctx)
 
 
+
 def main(request):
+    ostatni=JedzonkoPlan.objects.all().latest('id')
+    cycki=JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
     ilosc_r = JedzonkoPlan.objects.all().count()
     ilosc_p = JedzonkoRecipe.objects.all().count()
-    return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p})
+    return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,'ostatni':ostatni,'cycki':cycki})
 
 
 def plan(request):
