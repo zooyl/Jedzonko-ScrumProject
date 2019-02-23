@@ -6,6 +6,7 @@ from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, da
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class IndexView(View):
@@ -20,8 +21,8 @@ def main(request):
     if check.exists():
         ostatni = JedzonkoPlan.objects.all().latest('id')
         var = JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
-        ilosc_r = JedzonkoPlan.objects.all().count()
-        ilosc_p = JedzonkoRecipe.objects.all().count()
+        ilosc_p = JedzonkoPlan.objects.all().count()
+        ilosc_r = JedzonkoRecipe.objects.all().count()
         return render(request, 'dashboard.html',
                       {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'var': var})
     else:
@@ -53,9 +54,13 @@ class PlanAdd(View):
     def post(self, request):
         plan_name = request.POST.get('plan_name')
         description = request.POST.get('description')
-        JedzonkoPlan.objects.create(name=plan_name, description=description)
-        finish = "Plan dodany"
-        return render(request, 'app-add-schedules.html', {'finish': finish})
+        if '' in (plan_name, description):
+            warning = "Uzupelnij wszystkie pola"
+            return render(request, 'app-add-schedules.html', {'warning': warning})
+        else:
+            JedzonkoPlan.objects.create(name=plan_name, description=description)
+            finish = "Plan dodany"
+            return render(request, 'app-add-schedules.html', {'finish': finish})
 
 
 class Randomize(View):
@@ -183,9 +188,9 @@ class PlanDetails(View):
                 'dzien': days,
                 'przepis': przepis
             }
-            dayd = ''.join(day)
-            creat = JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day,
-                                                                recipe_id_id=recipe_name, plan_id_id=y)
+            ''.join(day)
+            JedzonkoRecipeplan.objects.update_or_create(meal_name=name, order=order, day_name=day,
+                                                        recipe_id_id=recipe_name, plan_id_id=y)
             return render(request, 'app-schedules-meal-recipe.html', ctx)
         except IntegrityError:
             return redirect('/recipe/add')
@@ -200,10 +205,6 @@ def recipe_details(request, id):
             recipe.votes -= 1
     recipe.save()
     return render(request, 'app-recipe-details.html', {'recipe': recipe})
-
-
-def test(request):
-    return render(request, 'app-details-schedules.html')
 
 
 class Modify(View):
@@ -246,3 +247,37 @@ def del_plan(request, id):
     plan = JedzonkoPlan.objects.get(id=id)
     plan.delete()
     return redirect('/plan/list')
+
+
+def plan_details(request, id):
+    try:
+        day = days
+        plan = JedzonkoPlan.objects.all().get(id=id)
+        schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('order')
+        return render(request, 'app-details-schedules.html', {'plan': plan, 'schedule': schedule, 'day': day})
+    except ObjectDoesNotExist:
+        return redirect(f'/plan/add/details/{id}')
+
+
+class EditPlan(View):
+
+    def get(self, request, id):
+        try:
+            plan = JedzonkoPlan.objects.get(id=id)
+        except JedzonkoRecipe.DoesNotExist:
+            raise Http404("Taki plan nie istnieje")
+        return render(request, 'app-edit-schedules.html', {'plan': plan})
+
+    def post(self, request, id):
+        plan = JedzonkoPlan.objects.get(id=id)
+        name = request.POST['name']
+        description = request.POST['description']
+        if '' in (name, description):
+            warning = "Uzupelnij wszystkie pola"
+            return render(request, 'app-edit-schedules.html', {'plan': plan, 'warning': warning})
+        else:
+            plan.name = name
+            plan.description = description
+            plan.save()
+            finish = "Przepis zaktualizowany"
+            return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
