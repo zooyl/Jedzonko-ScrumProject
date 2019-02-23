@@ -157,15 +157,18 @@ class PlanList(View):
 class PlanDetails(View):
 
     def get(self, request, id):
-        var = JedzonkoPlan.objects.get(pk=id)
-        y = var.name
-        przepis = JedzonkoRecipe.objects.all()
-        ctx = {
-            'nazwa_planu': y,
-            'przepis': przepis,
-            'dzien': days
-        }
-        return render(request, 'app-schedules-meal-recipe.html', ctx)
+        try:
+            var = JedzonkoPlan.objects.get(pk=id)
+            y = var.name
+            przepis = JedzonkoRecipe.objects.all()
+            ctx = {
+                'nazwa_planu': y,
+                'przepis': przepis,
+                'dzien': days
+            }
+            return render(request, 'app-schedules-meal-recipe.html', ctx)
+        except JedzonkoPlan.DoesNotExist:
+            raise Http404("Taki plan nie istnieje")
 
     def post(self, request, id):
         try:
@@ -200,14 +203,17 @@ class PlanDetails(View):
 
 
 def recipe_details(request, id):
-    recipe = JedzonkoRecipe.objects.get(id=id)
-    if request.method == "POST":
-        if request.POST.get('like'):
-            recipe.votes += 1
-        else:
-            recipe.votes -= 1
-    recipe.save()
-    return render(request, 'app-recipe-details.html', {'recipe': recipe})
+    try:
+        recipe = JedzonkoRecipe.objects.get(id=id)
+        if request.method == "POST":
+            if request.POST.get('like'):
+                recipe.votes += 1
+            else:
+                recipe.votes -= 1
+        recipe.save()
+        return render(request, 'app-recipe-details.html', {'recipe': recipe})
+    except JedzonkoRecipe.DoesNotExist:
+        raise Http404("Taki przepis nie istnieje")
 
 
 class Modify(View):
@@ -241,15 +247,21 @@ class Modify(View):
 
 
 def del_recipe(request, id):
-    recipe = JedzonkoRecipe.objects.get(id=id)
-    recipe.delete()
-    return redirect('/recipe/list')
+    try:
+        recipe = JedzonkoRecipe.objects.get(id=id)
+        recipe.delete()
+        return redirect('/recipe/list')
+    except JedzonkoRecipe.DoesNotExist:
+        raise Http404("Taki przepis nie istnieje")
 
 
 def del_plan(request, id):
-    plan = JedzonkoPlan.objects.get(id=id)
-    plan.delete()
-    return redirect('/plan/list')
+    try:
+        plan = JedzonkoPlan.objects.get(id=id)
+        plan.delete()
+        return redirect('/plan/list')
+    except JedzonkoPlan.DoesNotExist:
+        raise Http404("Taki plan nie istnieje")
 
 
 def plan_details(request, id):
@@ -259,7 +271,7 @@ def plan_details(request, id):
         schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('order')
         return render(request, 'app-details-schedules.html', {'plan': plan, 'schedule': schedule, 'day': day})
     except ObjectDoesNotExist:
-        return redirect(f'/plan/add/details/{id}')
+        raise Http404('Taki plan nie istnieje')
 
 
 
@@ -268,7 +280,7 @@ class EditPlan(View):
     def get(self, request, id):
         try:
             plan = JedzonkoPlan.objects.get(id=id)
-        except JedzonkoRecipe.DoesNotExist:
+        except JedzonkoPlan.DoesNotExist:
             raise Http404("Taki plan nie istnieje")
         return render(request, 'app-edit-schedules.html', {'plan': plan})
 
