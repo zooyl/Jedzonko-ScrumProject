@@ -25,14 +25,6 @@ def main(request):
     return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,'ostatni':ostatni,'cycki':cycki})
 
 
-def plan(request):
-    return render(request, 'app-schedules.html')
-
-
-# def lista_planow(request):
-#     return render(request, 'app-schedules.html')
-
-
 def contact(request):
     content = JedzonkoPage.objects.filter(slug="contact")
     if content.exists():
@@ -147,6 +139,8 @@ class PlanList(View):
     def post(self, request):
         return render(request, 'app-schedules.html')
 
+def test(request):
+    return render(request, 'app-schedules-meal-recipe.html')
 
 class PlanDetails(View):
 
