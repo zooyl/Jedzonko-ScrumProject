@@ -262,6 +262,7 @@ def plan_details(request, id):
         return redirect(f'/plan/add/details/{id}')
 
 
+
 class EditPlan(View):
 
     def get(self, request, id):
