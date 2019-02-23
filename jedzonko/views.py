@@ -2,7 +2,9 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.views import View
 import random
-from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoPage, JedzonkoRecipeplan, JedzonkoDayname
+from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage, JedzonkoDayname
+
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 
@@ -27,8 +29,8 @@ def plan(request):
     return render(request, 'app-schedules.html')
 
 
-def lista_planow(request):
-    return render(request, 'app-schedules.html')
+# def lista_planow(request):
+#     return render(request, 'app-schedules.html')
 
 
 def contact(request):
@@ -122,6 +124,71 @@ class RecipesList(View):
 
     def post(self, request):
         return render(request, 'recipes.html')
+
+
+class PlanList(View):
+
+    def get(self, request):
+        sorting = JedzonkoPlan.objects.all().order_by('name')
+        paginator = Paginator(sorting, 50)
+        page = request.GET.get('page', 1)
+        try:
+            users = paginator.page(page)
+        except PageNotAnInteger:
+            users = paginator.page(1)
+        except EmptyPage:
+            users = paginator.page(paginator.num_pages)
+        ctx = {
+            'sorting': sorting,
+            'users': users
+        }
+        return render(request, 'app-schedules.html', ctx)
+
+    def post(self, request):
+        return render(request, 'app-schedules.html')
+
+
+class PlanDetails(View):
+
+    def get(self, request):
+        var = JedzonkoRecipeplan.objects.all().filter(pk=4)  # zamienic 4ke na zalezna od wyboru planu przez usera
+        for i in var:
+            y = i.meal_name
+        przepis = JedzonkoRecipe.objects.all()
+        ctx = {
+            'nazwa_planu': y,
+            'przepis': przepis,
+            'dzien': days
+        }
+        return render(request, 'app-schedules-meal-recipe.html', ctx)
+
+    def post(self, request):
+        var = JedzonkoRecipeplan.objects.all().filter(pk=4)
+        for i in var:
+            y = i.id
+        przepis = JedzonkoRecipe.objects.all()
+        name = request.POST.get('fname')
+        order = request.POST.get('fnumber')
+        recipe_name = request.POST.get('frecipe')
+        day = request.POST.get('fday')
+        if '' in (var, name):
+            ctx = {
+                'message': 'Uzupelnij pola',
+                'nazwa_planu': y,
+                'przepis': przepis,
+                'dzien': days
+
+            }
+            return render(request, 'app-schedules-meal-recipe.html', ctx)
+        ctx = {
+            'message': 'Przepis zapisany',
+            'nazwa_planu': y,
+            'dzien': days,
+            'przepis': przepis
+        }
+        JedzonkoRecipeplan.objects.create(meal_name=name, order=order, recipe_id_id=recipe_name, day_name_id_id=day[0],
+                                          plan_id_id=y, )
+        return render(request, 'app-schedules-meal-recipe.html', ctx)
 
 
 def recipe_details(request, id):
