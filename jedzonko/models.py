@@ -10,6 +10,7 @@ days = (
     (6, 'Niedziela'),
 )
 
+
 class JedzonkoRecipe(models.Model):
     name = models.CharField(max_length=255)
     ingredients = models.TextField()
@@ -28,24 +29,18 @@ class JedzonkoRecipe(models.Model):
 class JedzonkoPlan(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True)
-    created = models.TimeField(auto_now_add=True)
-
-
-class JedzonkoDayname(models.Model):
-    day_name = models.IntegerField(choices=days)
-    order = models.IntegerField(blank=True)
+    created = models.DateField(auto_now_add=True)
 
 
 class JedzonkoRecipeplan(models.Model):
     meal_name = models.CharField(max_length=255)
     order = models.IntegerField()
-    day_name_id = models.ForeignKey(JedzonkoDayname, on_delete=models.DO_NOTHING)
-    plan_id = models.ForeignKey(JedzonkoPlan, on_delete=models.DO_NOTHING)
-    recipe_id = models.ForeignKey(JedzonkoRecipe, on_delete=models.DO_NOTHING)
+    day_name = models.IntegerField(choices=days, null=True)
+    plan_id = models.ForeignKey(JedzonkoPlan, on_delete=models.CASCADE)
+    recipe_id = models.ForeignKey(JedzonkoRecipe, on_delete=models.CASCADE)
 
 
 class JedzonkoPage(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     slug = models.SlugField(max_length=255, blank=True)
-

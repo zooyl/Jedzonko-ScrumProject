@@ -15,12 +15,12 @@
                     <span class="title">dodaj plan</span>
                 </a>
             </div>
-            <div class="menu-item border-dashed">
-                <a href="">
-                    <i class="far fa-plus-square icon-plus-square"></i>
-                    <span class="title">dodaj przepis do planu</span>
-                </a>
-            </div>
+{#            <div class="menu-item border-dashed">#}
+{#                <a href="/plan/add/details">#}
+{#                    <i class="far fa-plus-square icon-plus-square"></i>#}
+{#                    <span class="title">dodaj przepis do planu</span>#}
+{#                </a>#}
+{#            </div>#}
         </div>
         <div class="dashboard-alerts">
             <div class="alert-item alert-info">
@@ -37,22 +37,22 @@
         <h2 class="dashboard-content-title">
             <span>Ostatnio dodany plan:</span> {{ostatni.name}}
         </h2>
-        {%for i in cycki%}
+        {%for przepisy in przpisy_dla_dnia%}
         <table class="table">
             <thead>
             <tr class="d-flex">
-                <th class="col-2">{{i.day_name_id.day_name}}</th>
+                <th class="col-2">Numer dnia tygodnia: {{forloop.counter}}</th>
                 <th class="col-8"></th>
                 <th class="col-2"></th>
             </tr>
             </thead>
             <tbody>
-            {%for j in cycki%}
+            {%for przepis in przepisy%}
             <tr class="d-flex">
-                <td class="col-2">{{j.meal_name}}</td>
-                <td class="col-8">{{j.recipe_id.name}}</td>
+                <td class="col-2">{{przepis.meal_name}}</td>
+                <td class="col-8">{{przepis.recipe_id.name}}</td>
                 <td class="col-2">
-                    <button type="button" class="btn btn-primary rounded-0">Szczegóły</button>
+                    <a class="btn btn-primary rounded-0" href="/recipe/{{przepis.id}}">Szczegóły</a>
                 </td>
             </tr>
             {%endfor%}

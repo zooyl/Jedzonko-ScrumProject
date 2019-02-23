@@ -4,17 +4,19 @@
     <div class="dashboard-content border-dashed p-3 m-4 view-height">
         <div class="row border-bottom border-3 p-1 m-1">
             <div class="col noPadding">
-                <h3 class="color-header text-uppercase" >DODAJ PRZEPIS DO PLANU {{ nazwa_planu }}</h3>
+                <h3 class="color-header text-uppercase">DODAJ PRZEPIS DO PLANU {{ nazwa_planu }}</h3>
             </div>
-            <form action="#" method="POST">
-                 {% csrf_token %}
+                        <div class="col noPadding">
+                <h3>{{ message }}</h3>
+            </div>
+            <form action="" method="POST">
+                {% csrf_token %}
                 <div class="col d-flex justify-content-end mb-2 noPadding">
-                    <button type="'submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
+                    <button type="submit" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">Zapisz</button>
                 </div>
         </div>
-        {{ message }}
-        <div class="schedules-content">
 
+        <div class="schedules-content">
             <div class="form-group row">
                 <div class="col-sm-3">
                     <input type="hidden" id="" name="" value="3487">
@@ -24,7 +26,7 @@
                 <label for="name" class="col-sm-2 label-size col-form-label">
                     Nazwa posiłku
                 </label>
-                <div class="col-sm-10">
+                <div class="col-sm-4">
                     <input type="text" class="form-control" value=""
                            placeholder="Nazwa posiłku" name="fname">
                 </div>
@@ -57,7 +59,7 @@
                 <div class="col-sm-2">
                     <select class="form-control" name="fday">
                         {% for i in dzien %}
-                            <option value={{ i }}>{{ i }}</option>
+                            <option value={{ i.0 }}>{{ i.1 }}</option>
                         {% endfor %}
                     </select>
                 </div>
