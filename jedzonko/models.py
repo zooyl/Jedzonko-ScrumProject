@@ -34,7 +34,7 @@ class JedzonkoPlan(models.Model):
 
 class JedzonkoDayname(models.Model):
     day_name = models.IntegerField(choices=days)
-    order = models.IntegerField(null=True)
+    order = models.IntegerField(blank=True)
 
 
 class JedzonkoRecipeplan(models.Model):

@@ -16,11 +16,10 @@ class IndexView(View):
 
 def main(request):
     ostatni=JedzonkoPlan.objects.all().latest('id')
-    jdn=JedzonkoDayname.objects.all()
     cycki=JedzonkoRecipeplan.objects.filter(plan_id=ostatni)
     ilosc_r = JedzonkoPlan.objects.all().count()
     ilosc_p = JedzonkoRecipe.objects.all().count()
-    return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,'ostatni':ostatni,'cycki':cycki,'jdn':jdn})
+    return render(request, 'dashboard.html', {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,'ostatni':ostatni,'cycki':cycki})
 
 
 def plan(request):
