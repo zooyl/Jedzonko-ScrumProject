@@ -275,6 +275,15 @@ def plan_details(request, id):
         raise Http404('Taki plan nie istnieje')
 
 
+def details_delete(request, id_schedule, id_plan):
+    try:
+        schedule = JedzonkoRecipeplan.objects.get(id=id_schedule)
+        schedule.delete()
+        return redirect(f'/plan/{id_plan}')
+    except ObjectDoesNotExist:
+        raise Http404('Taki plan nie istnieje')
+
+
 class EditPlan(View):
 
     def get(self, request, id):
