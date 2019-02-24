@@ -1,0 +1,21 @@
+{% extends "__base__.html" %}
+
+{% block title %}Nowy {% endblock %}
+
+{% block content %}
+    <h1>O Nas</h1>
+    <div align="center" class="col">
+        <h3 class="color-header text-uppercase">
+            <div class="col noPadding">
+                <h3>{{ empty }}</h3>
+                {% for i in content %}
+                    <h3>{{ finish }}</h3>
+                    {{ i.title }} <br>
+                    {{ i.description }}<br>
+                    <br>
+                {% endfor %}
+            </div>
+        </h3>
+    </div>
+
+{% endblock content %}

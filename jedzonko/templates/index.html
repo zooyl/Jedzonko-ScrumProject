@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,19 +22,13 @@
             </a>
             <ul class="nav nounderline text-uppercase">
                 <li class="nav-item ml-4">
-                    <a class="nav-link color-header" href="login.html">logowanie</a>
+                    <a class="nav-link" href="/about">o aplikacji</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a class="nav-link color-header" href="registration.html">rejestracja</a>
+                    <a class="nav-link disabled" href='/recipe/list'>Przepisy</a>
                 </li>
                 <li class="nav-item ml-4">
-                    <a class="nav-link" href="about.html">o aplikacji</a>
-                </li>
-                <li class="nav-item ml-4">
-                    <a class="nav-link disabled" href="recipes.html">Przepisy</a>
-                </li>
-                <li class="nav-item ml-4">
-                    <a class="nav-link disabled" href="contact.html">Kontakt</a>
+                    <a class="nav-link disabled" href="/contact">Kontakt</a>
                 </li>
             </ul>
         </nav>
@@ -47,27 +40,24 @@
                 <div class="carousel-item active">
                     <div class="container w-75 d-flex">
                         <div class="carousel-caption d-block">
-                            <h1>Lorem ipsum dolor sit amet</h1>
-                            <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                magna aliqua.</h3>
+                            <h1>{{ title0 }}</h1>
+                            <h3> {{ losuj0 }}</h3>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
                     <div class="container w-75 d-flex">
                         <div class="carousel-caption d-block">
-                            <h1>Torem ipsum dolor sit amet</h1>
-                            <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                magna aliqua.</h3>
+                            <h1>{{ title1 }}</h1>
+                            <h3> {{ losuj1 }}.</h3>
                         </div>
                     </div>
                 </div>
                 <div class="carousel-item">
                     <div class="container w-75 d-flex">
                         <div class="carousel-caption d-block">
-                            <h1>Borem ipsum dolor sit amet</h1>
-                            <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                magna aliqua.</h3>
+                            <h1>{{ title2 }}</h1>
+                            <h3> {{ losuj2 }}</h3>
                         </div>
                     </div>
                 </div>
@@ -91,9 +81,7 @@
                     magna aliqua.</h4>
             </div>
             <div class="ml-4 align-self-center">
-                <button class="btn btn-color rounded-0 mt-4 pl-4 pr-4">
-                    <a href="index.html">Lorem ipsum</a>
-                </button>
+                <a href='main/'><button id="button" type="button" class="btn btn-color rounded-0 mt-4 pl-4 pr-4">Pulpit</button></a>
             </div>
         </div>
     </section>

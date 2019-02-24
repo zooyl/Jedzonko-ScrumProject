@@ -344,7 +344,7 @@ margin: 0 auto !important;
   display: block;
   color: var(--link-color)!important;
 }
-
+.dashboard-section .nav-item
 .circle-div {
   border: 3px solid var(--link-color);
   border-radius: 50%;

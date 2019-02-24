@@ -14,21 +14,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from jedzonko.views import IndexView, PlanAdd
-from django.urls import path,re_path
+from django.urls import path
+from jedzonko.views import IndexView, Form, PlanAdd, RecipesList, recipe_details, Randomize, \
+    main, about, contact, Modify, del_recipe, PlanList, PlanDetails, del_plan, plan_details, \
+    EditPlan, details_delete
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
-    path('plan/add', PlanAdd.as_view()),
-    re_path(r'$',),
-    re_path(r'main/$',),
-    re_path(r'recipe/(\d)*',),
-    re_path(r'recipe/list/$',),
-    re_path(r'recipe/add/$',),
-    re_path(r'recipe/modify/$',),
-    re_path(r'plan/(\d)*',),
-    re_path(r'plan/add/details/$',),
-    re_path(r'contact/$',),
-    re_path(r'about',),
+    path('recipe/list/', RecipesList.as_view()),
+    path('main/', main),
+    path('plan/add/', PlanAdd.as_view()),
+    path('contact/', contact),
+    path('about/', about),
+    path('', Randomize.as_view()),
+    path('recipe/add/', Form.as_view()),
+    path('plan/list/', PlanList.as_view()),
+    path('plan/modify/<int:id>', EditPlan.as_view()),
+    path('recipe/', recipe_details),
+    path('plan/<int:id>', plan_details),
+    path('plan/add/details/<int:id>', PlanDetails.as_view()),
+    path('recipe/list/', RecipesList.as_view()),
+    path('recipe/<int:id>', recipe_details),
+    path('recipe/delete/<int:id>', del_recipe),
+    path('plan/delete/<int:id>', del_plan),
+    path('plan/details/delete/<int:id_schedule>/<int:id_plan>', details_delete),
+    path('recipe/modify/<int:id>', Modify.as_view()),
+
 ]
