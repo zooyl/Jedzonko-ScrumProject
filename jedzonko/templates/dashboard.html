@@ -43,17 +43,18 @@
             <thead>
             <tr class="d-flex">
                 <th class="col-2">Numer dnia tygodnia: {{forloop.counter}}</th>
-                <th class="col-8"></th>
-                <th class="col-2"></th>
+                <th class="col-2">Nazwa posilku</th>
+                <th class="col-6">Nazwa przepisu</th>
+                <th class="col-2">Akcje</th>
             </tr>
             </thead>
             <tbody>
             {%for przepis in przepisy%}
             <tr class="d-flex">
+                <td class="col-2"></td>
                 <td class="col-2">{{przepis.meal_name}}</td>
-                <td class="col-8">{{przepis.recipe_id.name}}</td>
-                <td class="col-2">
-                    <a class="btn btn-primary rounded-0" href="/recipe/{{przepis.recipe_id.id}}">Szczegóły</a>
+                <td class="col-6">{{przepis.recipe_id.name}}</td>
+                <td class="col-2"><a class="btn btn-primary rounded-0" href="/recipe/{{przepis.recipe_id.id}}">Szczegóły przepisu</a>
                 </td>
             </tr>
             {%endfor%}
