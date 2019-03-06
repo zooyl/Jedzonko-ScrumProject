@@ -315,3 +315,14 @@ class EditPlan(View):
             plan.save()
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
+
+
+class SearchRecipe(View):
+
+    def get(self, request):
+        return render(request, "search-recipe.html")
+
+    def post(self, request):
+        name = request.POST['name']
+        recipe = JedzonkoRecipe.objects.get(name__contains=name)
+        return render(request, "recipes.html")
