@@ -16,6 +16,15 @@ class IndexView(View):
         return render(request, "test.html", ctx)
 
 
+def random_recipe(request):
+    recipe = JedzonkoRecipe.objects.all()
+    if recipe.exists():
+        ran_recipe = random.choice(recipe)
+        return redirect(f'/recipe/{ran_recipe.id}')
+    else:
+        return redirect('/recipe/add')
+
+
 def main(request):
     check = JedzonkoPlan.objects.all()
     if check.exists():
