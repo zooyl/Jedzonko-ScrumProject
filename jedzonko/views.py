@@ -32,12 +32,11 @@ def main(request):
         ilosc_p = JedzonkoPlan.objects.all().count()
         ilosc_r = JedzonkoRecipe.objects.all().count()
         przpisy = []
-        dayz = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela']
         for day in range(7):
             przpisy.append(JedzonkoRecipeplan.objects.filter(plan_id=ostatni, day_name=day))
         return render(request, 'dashboard.html',
-                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'przpisy_dla_dnia': przpisy,
-                       'dni': dayz})
+                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,
+                       'ostatni': ostatni, 'przpisy_dla_dnia': przpisy})
     else:
         return render(request, 'dashboard.html')
 
@@ -123,45 +122,37 @@ class Form(View):
 class RecipesList(View):
 
     def get(self, request):
-        sorting = JedzonkoRecipe.objects.all().order_by('-votes')
-        paginator = Paginator(sorting, 50)
-        page = request.GET.get('page', 1)
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
-        ctx = {
-            'sorting': sorting,
-            'users': users
-        }
-        return render(request, 'recipes.html', ctx)
+        qs = JedzonkoRecipe.objects.all().order_by("-votes", "-created")
+        paginator = Paginator(qs, 15)
+        page_number = request.GET.get("page")
 
-    def post(self, request):
-        return render(request, 'recipes.html')
+        if page_number is None:
+            page_number = 1
+        elif int(page_number) > paginator.num_pages:
+            raise Http404("Podana strona nie istnieje!")
+        page_number = int(page_number)
+        start_index = page_number - 5 if page_number >= 5 else 0
+        end_index = page_number + 5 if page_number <= paginator.num_pages - 5 else paginator.num_pages
+        page_range = paginator.page_range[start_index:end_index]
+        return render(request, "recipes.html", {"recipes": paginator.page(page_number), "page_range": page_range})
 
 
 class PlanList(View):
 
     def get(self, request):
-        sorting = JedzonkoPlan.objects.all().order_by('name')
-        paginator = Paginator(sorting, 50)
-        page = request.GET.get('page', 1)
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
-        ctx = {
-            'sorting': sorting,
-            'users': users
-        }
-        return render(request, 'app-schedules.html', ctx)
+        qs = JedzonkoPlan.objects.all().order_by('name')
+        paginator = Paginator(qs, 15)
+        page_number = request.GET.get("page")
 
-    def post(self, request):
-        return render(request, 'app-schedules.html')
+        if page_number is None:
+            page_number = 1
+        elif int(page_number) > paginator.num_pages:
+            raise Http404("Podana strona nie istnieje!")
+        page_number = int(page_number)
+        start_index = page_number - 5 if page_number >= 5 else 0
+        end_index = page_number + 5 if page_number <= paginator.num_pages - 5 else paginator.num_pages
+        page_range = paginator.page_range[start_index:end_index]
+        return render(request, "app-schedules.html", {"plans": paginator.page(page_number), "page_range": page_range})
 
 
 class PlanDetails(View):
@@ -324,5 +315,5 @@ class SearchRecipe(View):
 
     def post(self, request):
         name = request.POST['name']
-        recipe = JedzonkoRecipe.objects.get(name__contains=name)
-        return render(request, "recipes.html")
+        recipes = JedzonkoRecipe.objects.filter(name__contains=name)
+        return render(request, "recipes.html", {'recipes': recipes})
