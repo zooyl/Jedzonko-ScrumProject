@@ -316,4 +316,28 @@ class SearchRecipe(View):
     def post(self, request):
         name = request.POST['name']
         recipes = JedzonkoRecipe.objects.filter(name__contains=name)
-        return render(request, "recipes.html", {'recipes': recipes})
+        print(recipes)
+        if recipes.exists():
+            if name == '':
+                warning = "Wpisz nazwe przepisu"
+                return render(request, "search-recipe.html", {'warning': warning})
+            elif len(recipes) > 15:
+                too_many = "Zbyt duzo wynikow"
+                return render(request, "search-recipe.html", {'too_many': too_many})
+            else:
+                return render(request, "recipes.html", {'recipes': recipes})
+        else:
+            empty = "Taki przepis nie istnieje"
+            return render(request, "search-recipe.html", {'empty': empty})
+
+
+class CreateInfo(View):
+
+    def get(self, request):
+        return render(request, "create-info.html")
+
+    def post(self, request):
+        JedzonkoPage.objects.create(title=request.POST['title'],
+                                    description=request.POST['description'],
+                                    slug=request.POST['slug'])
+        return redirect('/')

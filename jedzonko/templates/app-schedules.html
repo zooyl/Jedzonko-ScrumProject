@@ -19,7 +19,7 @@
            <table class="table border-bottom">
                <thead>
                <tr class="d-flex">
-                   <th class="col-1">ID</th>
+                   <th class="col-1">NR</th>
                    <th class="col-2">NAZWA</th>
                    <th class="col-7">OPIS</th>
                    <th class="col-2 center">AKCJE</th>
@@ -31,7 +31,7 @@
                    <tbody class="text-color-lighter">
                    {% for recipe in plans %}
                        <tr class="d-flex">
-                           <td class="col-1">{{ recipe.id }}</td>
+                           <td class="col-1">{{ forloop.counter }}</td>
                            <td class="col-2">{{ recipe.name }}</td>
                            <td class="col-7">
                                {{ recipe.description }}
