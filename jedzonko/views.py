@@ -26,7 +26,8 @@ def main(request):
         for day in range(7):
             przpisy.append(JedzonkoRecipeplan.objects.filter(plan_id=ostatni, day_name=day))
         return render(request, 'dashboard.html',
-                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'przpisy_dla_dnia': przpisy})
+                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,
+                       'ostatni': ostatni, 'przpisy_dla_dnia': przpisy})
     else:
         return render(request, 'dashboard.html')
 
@@ -143,6 +144,7 @@ class PlanList(View):
         end_index = page_number + 5 if page_number <= paginator.num_pages - 5 else paginator.num_pages
         page_range = paginator.page_range[start_index:end_index]
         return render(request, "app-schedules.html", {"plans": paginator.page(page_number), "page_range": page_range})
+
 
 class PlanDetails(View):
 
@@ -298,4 +300,38 @@ class EditPlan(View):
             plan.save()
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
+
+class SearchRecipe(View):
+
+    def get(self, request):
+        return render(request, "search-recipe.html")
+
+    def post(self, request):
+        name = request.POST['name']
+        recipes = JedzonkoRecipe.objects.filter(name__contains=name)
+        print(recipes)
+        if recipes.exists():
+            if name == '':
+                warning = "Wpisz nazwe przepisu"
+                return render(request, "search-recipe.html", {'warning': warning})
+            elif len(recipes) > 15:
+                too_many = "Zbyt duzo wynikow"
+                return render(request, "search-recipe.html", {'too_many': too_many})
+            else:
+                return render(request, "recipes.html", {'recipes': recipes})
+        else:
+            empty = "Taki przepis nie istnieje"
+            return render(request, "search-recipe.html", {'empty': empty})
+
+
+class CreateInfo(View):
+
+    def get(self, request):
+        return render(request, "create-info.html")
+
+    def post(self, request):
+        JedzonkoPage.objects.create(title=request.POST['title'],
+                                    description=request.POST['description'],
+                                    slug=request.POST['slug'])
+        return redirect('/')
 
