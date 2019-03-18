@@ -15,6 +15,13 @@ class IndexView(View):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
+def random_recipe(request):
+    recipe = JedzonkoRecipe.objects.all()
+    if recipe.exists():
+        ran_recipe = random.choice(recipe)
+        return redirect(f'/recipe/{ran_recipe.id}')
+    else:
+        return redirect('/recipe/add')
 
 def main(request):
     check = JedzonkoPlan.objects.all()
@@ -23,12 +30,11 @@ def main(request):
         ilosc_p = JedzonkoPlan.objects.all().count()
         ilosc_r = JedzonkoRecipe.objects.all().count()
         przpisy = []
-        dayz = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela']
         for day in range(7):
             przpisy.append(JedzonkoRecipeplan.objects.filter(plan_id=ostatni, day_name=day))
         return render(request, 'dashboard.html',
-                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p, 'ostatni': ostatni, 'przpisy_dla_dnia': przpisy,
-                       'dni': dayz})
+                      {'ilosc_r': ilosc_r, 'ilosc_p': ilosc_p,
+                       'ostatni': ostatni, 'przpisy_dla_dnia': przpisy})
     else:
         return render(request, 'dashboard.html')
 
@@ -114,45 +120,37 @@ class Form(View):
 class RecipesList(View):
 
     def get(self, request):
-        sorting = JedzonkoRecipe.objects.all().order_by('-votes')
-        paginator = Paginator(sorting, 50)
-        page = request.GET.get('page', 1)
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
-        ctx = {
-            'sorting': sorting,
-            'users': users
-        }
-        return render(request, 'recipes.html', ctx)
+        qs = JedzonkoRecipe.objects.all().order_by("-votes", "-created")
+        paginator = Paginator(qs, 15)
+        page_number = request.GET.get("page")
 
-    def post(self, request):
-        return render(request, 'recipes.html')
+        if page_number is None:
+            page_number = 1
+        elif int(page_number) > paginator.num_pages:
+            raise Http404("Podana strona nie istnieje!")
+        page_number = int(page_number)
+        start_index = page_number - 5 if page_number >= 5 else 0
+        end_index = page_number + 5 if page_number <= paginator.num_pages - 5 else paginator.num_pages
+        page_range = paginator.page_range[start_index:end_index]
+        return render(request, "recipes.html", {"recipes": paginator.page(page_number), "page_range": page_range})
 
 
 class PlanList(View):
 
     def get(self, request):
-        sorting = JedzonkoPlan.objects.all().order_by('name')
-        paginator = Paginator(sorting, 50)
-        page = request.GET.get('page', 1)
-        try:
-            users = paginator.page(page)
-        except PageNotAnInteger:
-            users = paginator.page(1)
-        except EmptyPage:
-            users = paginator.page(paginator.num_pages)
-        ctx = {
-            'sorting': sorting,
-            'users': users
-        }
-        return render(request, 'app-schedules.html', ctx)
+        qs = JedzonkoPlan.objects.all().order_by('name')
+        paginator = Paginator(qs, 15)
+        page_number = request.GET.get("page")
 
-    def post(self, request):
-        return render(request, 'app-schedules.html')
+        if page_number is None:
+            page_number = 1
+        elif int(page_number) > paginator.num_pages:
+            raise Http404("Podana strona nie istnieje!")
+        page_number = int(page_number)
+        start_index = page_number - 5 if page_number >= 5 else 0
+        end_index = page_number + 5 if page_number <= paginator.num_pages - 5 else paginator.num_pages
+        page_range = paginator.page_range[start_index:end_index]
+        return render(request, "app-schedules.html", {"plans": paginator.page(page_number), "page_range": page_range})
 
 
 class PlanDetails(View):
@@ -163,6 +161,7 @@ class PlanDetails(View):
             y = var.name
             przepis = JedzonkoRecipe.objects.all()
             ctx = {
+                'ktory':['śniadanie','drugie śniadanie','obiad','podwieczorek','kolacja','przekąska'],
                 'nazwa_planu': y,
                 'przepis': przepis,
                 'dzien': days
@@ -177,11 +176,12 @@ class PlanDetails(View):
             y = var.id
             przepis = JedzonkoRecipe.objects.all()
             name = request.POST.get('fname')
-            order = request.POST.get('fnumber')
+            order = request.POST.get('forder')
             recipe_name = request.POST.get('frecipe')
             day = request.POST.get('fday')
             if '' in (name, order):
                 ctx = {
+                    'ktory': ['śniadanie', 'drugie śniadanie', 'obiad', 'podwieczorek', 'kolacja', 'przekąska'],
                     'message': 'Uzupelnij pola',
                     'nazwa_planu': y,
                     'przepis': przepis,
@@ -190,6 +190,7 @@ class PlanDetails(View):
                 }
                 return render(request, 'app-schedules-meal-recipe.html', ctx)
             ctx = {
+                'ktory': ['śniadanie', 'drugie śniadanie', 'obiad', 'podwieczorek', 'kolacja', 'przekąska'],
                 'message': 'Przepis dodany do planu',
                 'nazwa_planu': y,
                 'dzien': days,
@@ -269,7 +270,7 @@ def plan_details(request, id):
     try:
         day = days
         plan = JedzonkoPlan.objects.all().get(id=id)
-        schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('order')
+        schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('day_name')
         return render(request, 'app-details-schedules.html', {'plan': plan, 'schedule': schedule, 'day': day})
     except ObjectDoesNotExist:
         raise Http404('Taki plan nie istnieje')
@@ -306,3 +307,37 @@ class EditPlan(View):
             plan.save()
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
+
+class SearchRecipe(View):
+
+    def get(self, request):
+        return render(request, "search-recipe.html")
+
+    def post(self, request):
+        name = request.POST['name']
+        recipes = JedzonkoRecipe.objects.filter(name__contains=name)
+        print(recipes)
+        if recipes.exists():
+            if name == '':
+                warning = "Wpisz nazwe przepisu"
+                return render(request, "search-recipe.html", {'warning': warning})
+            elif len(recipes) > 15:
+                too_many = "Zbyt duzo wynikow"
+                return render(request, "search-recipe.html", {'too_many': too_many})
+            else:
+                return render(request, "recipes.html", {'recipes': recipes})
+        else:
+            empty = "Taki przepis nie istnieje"
+            return render(request, "search-recipe.html", {'empty': empty})
+
+
+class CreateInfo(View):
+
+    def get(self, request):
+        return render(request, "create-info.html")
+
+    def post(self, request):
+        JedzonkoPage.objects.create(title=request.POST['title'],
+                                    description=request.POST['description'],
+                                    slug=request.POST['slug'])
+        return redirect('/')

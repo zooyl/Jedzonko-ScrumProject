@@ -1,0 +1,28 @@
+{% extends "__base__.html" %}
+{% block title %}{% endblock title %}
+{% block content %}
+
+    <div class="dashboard-content border-dashed p-3 m-4 view-height">
+        <form action="/recipe/search" method="POST">
+            {% csrf_token %}
+            <div class="row padding-small">
+                <i class="fas fa-users icon-users"></i>
+                <h1>Wyszukaj wsrod przepisow:</h1>
+                <hr>
+                <div class="orange-line w-100"></div>
+            </div>
+            <label>Nazwa przepisu:
+                <input type="text" name="name">
+            </label>
+            <p align="center" style="font-size: 30px">
+                {{ too_many }}{{ warning }} {{ empty }}
+            </p>
+            <section class="mr-4 ml-4">
+                <div class="col d-flex justify-content-end mb-4 noPadding">
+                    <input type="submit"
+                           class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4" value="Wyszukaj
+            przepis">
+        </form>
+    </div>
+    </section>
+{% endblock content %}
