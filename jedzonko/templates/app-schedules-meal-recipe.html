@@ -33,11 +33,14 @@
             </div>
             <div class="form-group row">
                 <label for="number" class="col-sm-2 label-size col-form-label">
-                    Numer posiłku
+                    Nazwa posiłku
                 </label>
                 <div class="col-sm-2">
-                    <input type="number" class="form-control" value=""
-                           placeholder="Numer posiłki" name="fnumber">
+                    <select class="form-control" name="forder">
+                        {% for i in ktory %}
+                            <option value={{ i }}>{{ i }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
             <div class="form-group row">

@@ -29,9 +29,9 @@
                     <thead>
                     </tbody>
                     <tbody class="text-color-lighter">
-                    {% for recipe in sorting %}
+                    {% for recipe in plans %}
                         <tr class="d-flex">
-                            <td class="col-1">{{ forloop.counter }}</td>
+                            <td class="col-1">{{ recipe.id }}</td>
                             <td class="col-2">{{ recipe.name }}</td>
                             <td class="col-7">
                                 {{ recipe.description }}
@@ -54,22 +54,16 @@
         <section>
             <div class="pagination">
     <span class="step-links">
-        {% if users.has_previous %}
-            <a href="?page=1">&laquo;</a>
-            <a href="?page={{ users.previous_page_number }}">poprzednia</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ users.number }} of {{ users.paginator.num_pages }}.
-        </span>
-
-        {% if users.has_next %}
-            <a href="?page={{ users.next_page_number }}">nastepna</a>
-            <a href="?page={{ users.paginator.num_pages }}"> &raquo;</a>
-        {% endif %}
-    </span>
-            </div>
+        {% if plans.has_previous %}
+    <a href="?page={{plans.previous_page_number}}">&lt; poprzednia</a> |
+    {% endif %}
+    {% for i in page_range %}
+    <a href="?page={{ i }}">{{ i }}</a> |
+    {% endfor %}
+    {% if plans.has_next %}
+    <a href="?page={{plans.next_page_number}}">następna &gt;</a>
+    {% endif %}
+</section>
         </section>
-    </div>
     </div>
 {% endblock content %}

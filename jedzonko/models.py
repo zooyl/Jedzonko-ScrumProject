@@ -34,7 +34,7 @@ class JedzonkoPlan(models.Model):
 
 class JedzonkoRecipeplan(models.Model):
     meal_name = models.CharField(max_length=255)
-    order = models.IntegerField()
+    order = models.CharField(max_length=50)
     day_name = models.IntegerField(choices=days, null=True)
     plan_id = models.ForeignKey(JedzonkoPlan, on_delete=models.CASCADE)
     recipe_id = models.ForeignKey(JedzonkoRecipe, on_delete=models.CASCADE)
