@@ -20,7 +20,6 @@ from jedzonko.views import IndexView, Form, PlanAdd, RecipesList, recipe_details
     EditPlan, details_delete, random_recipe, SearchRecipe, CreateInfo
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
