@@ -20,6 +20,7 @@ from jedzonko.views import IndexView, Form, PlanAdd, RecipesList, recipe_details
     EditPlan, details_delete, random_recipe, SearchRecipe, CreateInfo
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', IndexView.as_view()),
@@ -32,7 +33,7 @@ urlpatterns = [
     path('recipe/add/', Form.as_view()),
     path('plan/list/', PlanList.as_view()),
     path('plan/modify/<int:id>', EditPlan.as_view()),
-    # path('recipe/', recipe_details),
+    path('recipe/', recipe_details),
     path('plan/<int:id>', plan_details),
     path('plan/add/details/<int:id>', PlanDetails.as_view()),
     path('recipe/list/', RecipesList.as_view()),
@@ -44,5 +45,4 @@ urlpatterns = [
     path('recipe/random', random_recipe),
     path('recipe/search', SearchRecipe.as_view()),
     path('info/add', CreateInfo.as_view()),
-
 ]

@@ -16,15 +16,6 @@ class IndexView(View):
         return render(request, "test.html", ctx)
 
 
-def random_recipe(request):
-    recipe = JedzonkoRecipe.objects.all()
-    if recipe.exists():
-        ran_recipe = random.choice(recipe)
-        return redirect(f'/recipe/{ran_recipe.id}')
-    else:
-        return redirect('/recipe/add')
-
-
 def main(request):
     check = JedzonkoPlan.objects.all()
     if check.exists():
@@ -163,6 +154,7 @@ class PlanDetails(View):
             y = var.name
             przepis = JedzonkoRecipe.objects.all()
             ctx = {
+                'ktory':['śniadanie','drugie śniadanie','obiad','podwieczorek','kolacja','przekąska'],
                 'nazwa_planu': y,
                 'przepis': przepis,
                 'dzien': days
@@ -177,11 +169,12 @@ class PlanDetails(View):
             y = var.id
             przepis = JedzonkoRecipe.objects.all()
             name = request.POST.get('fname')
-            order = request.POST.get('fnumber')
+            order = request.POST.get('forder')
             recipe_name = request.POST.get('frecipe')
             day = request.POST.get('fday')
             if '' in (name, order):
                 ctx = {
+                    'ktory': ['śniadanie', 'drugie śniadanie', 'obiad', 'podwieczorek', 'kolacja', 'przekąska'],
                     'message': 'Uzupelnij pola',
                     'nazwa_planu': y,
                     'przepis': przepis,
@@ -190,6 +183,7 @@ class PlanDetails(View):
                 }
                 return render(request, 'app-schedules-meal-recipe.html', ctx)
             ctx = {
+                'ktory': ['śniadanie', 'drugie śniadanie', 'obiad', 'podwieczorek', 'kolacja', 'przekąska'],
                 'message': 'Przepis dodany do planu',
                 'nazwa_planu': y,
                 'dzien': days,
@@ -269,7 +263,7 @@ def plan_details(request, id):
     try:
         day = days
         plan = JedzonkoPlan.objects.all().get(id=id)
-        schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('order')
+        schedule = JedzonkoRecipeplan.objects.filter(plan_id=id).order_by('day_name')
         return render(request, 'app-details-schedules.html', {'plan': plan, 'schedule': schedule, 'day': day})
     except ObjectDoesNotExist:
         raise Http404('Taki plan nie istnieje')
@@ -307,7 +301,6 @@ class EditPlan(View):
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
 
-
 class SearchRecipe(View):
 
     def get(self, request):
@@ -341,3 +334,4 @@ class CreateInfo(View):
                                     description=request.POST['description'],
                                     slug=request.POST['slug'])
         return redirect('/')
+

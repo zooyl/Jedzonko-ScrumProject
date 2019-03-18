@@ -21,48 +21,54 @@
                     <span class="title">Wyszukaj przepisu</span>
                 </a>
             </div>
-       </div>
-       <div class="dashboard-alerts">
-           <div class="alert-item alert-info">
-               <i class="fas icon-circle fa-info-circle"></i>
-               <span class="font-weight-bold">Liczba przepisów: {{ ilosc_r }}</span>
-           </div>
-           <div class="alert-item alert-light">
-               <i class="far icon-calendar fa-calendar-alt"></i>
-               <span class="font-weight-bold">Liczba planów: {{ ilosc_p }}</span>
-           </div>
-       </div>
-   </div>
-
-   <div class="m-4 p-4 border-dashed">
-       <h2 class="dashboard-content-title">
-           <span>Ostatnio dodany plan:</span> {{ostatni.name}}
-       </h2>
-       <table class="table">
-           <thead>
-           <tr class="d-flex">
-               <th class="col-2">Dzień tygodnia</th>
-               <th class="col-2">Nazwa posilku</th>
-               <th class="col-6">Nazwa przepisu</th>
-               <th class="col-2">Akcje</th>
-           </tr>
-           </thead>
-       </table>
-           {%for przepisy in przpisy_dla_dnia%}
-           <table class="table">
-           <tbody>
-           <tr class="d-flex">
-               <td class="col-2">{%if forloop.counter == 1 %}Poniedziałek{%elif forloop.counter == 2%}Wtorek{%elif forloop.counter == 3%}Środa{%elif forloop.counter == 4%}Czwartek{%elif forloop.counter == 5%}Piątek{%elif forloop.counter == 6%}Sobota {%else%} Niedziela {%endif%}</td>
-           {%for przepis in przepisy%}
-               <td class="col-2">{{przepis.meal_name}}</td>
-               <td class="col-6">{{przepis.recipe_id.name}}</td>
-               <td class="col-2"><a class="btn btn-primary rounded-0" href="/recipe/{{przepis.recipe_id.id}}">Szczegóły przepisu</a>
-               </td>
-           </tr>
-           {%endfor%}
-           </tbody>
-       </table>
-       {%endfor%}
-   </div>
+            <div class="menu-item border-dashed">
+                <a href="/plan/add">
+                    <i class="far fa-plus-square icon-plus-square"></i>
+                    <span class="title">dodaj plan</span>
+                </a>
+            </div>
+        </div>
+        <div class="dashboard-alerts">
+            <div class="alert-item alert-info">
+                <i class="fas icon-circle fa-info-circle"></i>
+                <span class="font-weight-bold">Liczba przepisów: {{ ilosc_r }}</span>
+            </div>
+            <div class="alert-item alert-light">
+                <i class="far icon-calendar fa-calendar-alt"></i>
+                <span class="font-weight-bold">Liczba planów: {{ ilosc_p }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="m-4 p-4 border-dashed">
+        <h2 class="dashboard-content-title">
+            <span>Ostatnio dodany plan:</span> {{ostatni.name}}
+        </h2>
+        <table class="table">
+            <thead>
+            <tr class="d-flex">
+                <th class="col-2">Dzień tygodnia</th>
+                <th class="col-2">Nazwa posilku</th>
+                <th class="col-6">Nazwa przepisu</th>
+                <th class="col-2">Akcje</th>
+            </tr>
+            </thead>
+        </table>
+            {%for przepisy in przpisy_dla_dnia%}
+            <table class="table">
+            <tbody>
+            {%for przepis in przepisy%}
+            <tr class="d-flex">
+                <th class="col-2">{%if przepis.day_name == 0 %}Poniedziałek{%elif przepis.day_name == 1%}Wtorek{%elif przepis.day_name == 2%}Środa{%elif przepis.day_name == 3%}Czwartek{%elif przepis.day_name  == 4%}Piątek{%elif przepis.day_name == 5%}Sobota {%else%} Niedziela{%endif%}</td>
+                <td class="col-0"></td>
+                <td class="col-2">{{przepis.meal_name}}</td>
+                <td class="col-6">{{przepis.recipe_id.name}}</td>
+                <td class="col-2"><a class="btn btn-primary rounded-0" href="/recipe/{{przepis.recipe_id.id}}">Szczegóły przepisu</a>
+                </td>
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+        {%endfor%}
+    </div>
 
 {% endblock content %}

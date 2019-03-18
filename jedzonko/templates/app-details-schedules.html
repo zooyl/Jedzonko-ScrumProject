@@ -33,7 +33,6 @@
                     </div>
                 </div>
             </div>
-
             <table class="table">
                 <thead>
                 <tr class="d-flex">
@@ -48,7 +47,7 @@
                     {% for i in schedule %}
                         <tbody class="text-color-lighter">
                         <tr class="d-flex">
-                            <th class="col-2">{{ forloop.counter }}</th>
+                            <th class="col-2">{%if i.day_name == 0 %}Poniedziałek{%elif i.day_name == 1%}Wtorek{%elif i.day_name  == 2%}Środa{%elif i.day_name == 3%}Czwartek{%elif i.day_name == 4%}Piątek{%elif i.day_name == 5%}Sobota {%else%} Niedziela{%endif%}</td>
                             <td class="col-2">{{ i.order }}</td>
                             <td class="col-2">{{ i.meal_name }}</td>
                             <td class="col-4">{{ i.recipe_id.name }}</td>
