@@ -1,0 +1,15 @@
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+# Change name, user and password for your own database and change file name to "local_settings.py"
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'name',
+        'HOST': 'localhost',
+        'PASSWORD': 'password',
+        'USER': 'user',
+        'PORT': 5432
+    }
+}

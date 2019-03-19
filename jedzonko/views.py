@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 import random
 from jedzonko.models import JedzonkoPlan, JedzonkoRecipe, JedzonkoRecipeplan, days, JedzonkoPage
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.db import IntegrityError
 from django.core.exceptions import ObjectDoesNotExist
@@ -15,6 +15,7 @@ class IndexView(View):
         ctx = {"actual_date": datetime.now()}
         return render(request, "test.html", ctx)
 
+
 def random_recipe(request):
     recipe = JedzonkoRecipe.objects.all()
     if recipe.exists():
@@ -22,6 +23,7 @@ def random_recipe(request):
         return redirect(f'/recipe/{ran_recipe.id}')
     else:
         return redirect('/recipe/add')
+
 
 def main(request):
     check = JedzonkoPlan.objects.all()
@@ -161,7 +163,7 @@ class PlanDetails(View):
             y = var.name
             przepis = JedzonkoRecipe.objects.all()
             ctx = {
-                'ktory':['śniadanie','drugie śniadanie','obiad','podwieczorek','kolacja','przekąska'],
+                'ktory': ['śniadanie', 'drugie śniadanie', 'obiad', 'podwieczorek', 'kolacja', 'przekąska'],
                 'nazwa_planu': y,
                 'przepis': przepis,
                 'dzien': days
@@ -308,6 +310,7 @@ class EditPlan(View):
             finish = "Przepis zaktualizowany"
             return render(request, 'app-edit-schedules.html', {'plan': plan, 'finish': finish})
 
+
 class SearchRecipe(View):
 
     def get(self, request):
@@ -316,7 +319,6 @@ class SearchRecipe(View):
     def post(self, request):
         name = request.POST['name']
         recipes = JedzonkoRecipe.objects.filter(name__contains=name)
-        print(recipes)
         if recipes.exists():
             if name == '':
                 warning = "Wpisz nazwe przepisu"
