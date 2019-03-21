@@ -1,0 +1,1 @@
+web: gunicorn Jedzonko-ScrumProject.wsgi
