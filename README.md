@@ -3,6 +3,9 @@ Jedzonko is a meal manager, that let users create recipes and schedules with add
 You can see last added plan in dashboard and vote for recipes.
 Made in SCRUM.
 
+# It's live!
+Check it out at: https://jedzonko-scrum.herokuapp.com/
+
 ### Installing
 
 These instructions will get you a copy of the project up and running.
