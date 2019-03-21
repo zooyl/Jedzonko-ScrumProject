@@ -34,6 +34,12 @@ After that, fill database using ```python manage.py loaddata jedzonko``` , final
 
 ![List](https://github.com/zooyl/Jedzonko-ScrumProject/blob/master/preview/ListaPrzepisow.png?raw=true)
 
+## Authors
+
+* **[MaciejKwiecinski](https://github.com/MaciejKwiecinski)**
+* **[Utosz](https://github.com/utosz)**
+* **[Zooyl](https://github.com/zooyl)**
+
 ## Built With
 
 * [Django](https://www.djangoproject.com/) - The web framework used
