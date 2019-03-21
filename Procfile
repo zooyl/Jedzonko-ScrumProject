@@ -1,1 +1,1 @@
-web: gunicorn Jedzonko-ScrumProject.wsgi
+web: gunicorn scrumlab.wsgi
