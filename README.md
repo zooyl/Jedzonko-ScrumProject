@@ -1,43 +1,45 @@
-<img alt="Logo" src="http://coderslab.pl/svg/logo-coderslab.svg" width="400">
+# Jedzonko
+Jedzonko is a meal manager, that let users create recipes and schedules with additional details to them.
+You can see last added plan in dashboard and vote for recipes.
+Made in SCRUM.
 
-# ScrumLab Python
+# It's live!
+Check it out at: https://jedzonko-scrum.herokuapp.com/
 
-## Jak skonfigurować aplikację?
+### Installing
 
-### Co skonfigurowaliśmy za Ciebie?
+These instructions will get you a copy of the project up and running.
+Create virtual environment on your machine, then install requirements using:
 
-- szablony
-  - umieszczaj je w aplikacji **jedzonko** w katalogu **templates**,
-- pliki statyczne
-  - pliki statyczne (czyli wszystkie pliki, które są serwowane przez aplikację: obrazki, pliki CSS, JS itp.)
-  umieszczaj w katalogu **static**, który znajduje się w głównym katalogu projektu.
-
-### Czego nie skonfigurowaliśmy?
-
-- bazy danych (ze względów bezpieczeństwa)
-
-**Pamiętaj:** nie należy trzymać danych wrażliwych pod kontrolą Gita! Takimi danymi wrażliwymi
-są m. in. dane do połączenia z bazą danych. Te dane trzymamy w pliku **local_settings.py**,
-którego nie znajdziesz w tym repozytorium (plik jest dodany do **.gitignore**)!
-
-Zajrzyj do pliku **settings.py**, znajdziesz w nim następującą sekcję:
-
-```python
-try:
-    from scrumlab.local_settings import DATABASES
-except ModuleNotFoundError:
-    print("Brak konfiguracji bazy danych w pliku local_settings.py!")
-    print("Uzupełnij dane i spróbuj ponownie!")
-    exit(0)
 ```
+pip install -r requirements.txt
+```
+### Important
+In ```scrumlab``` folder, update ```local_settings.py.txt```  to your settings and delete ```.txt``` from the end
+of a file.
 
-Oznacza to, że Django podczas każdego uruchomienia będzie próbowało zaimportować
-stałą `DATABASES` z pliku **local_settings.py**. Tam trzymaj dane do połączenia.
-Nie umieszczaj tego pliku pod kontrolą Gita. Aby ułatwić Ci pracę, przygotowaliśmy 
-plik **local_settings.py.example**, w którym znajdziesz przygotowane odpowiednie dane.
-Wystarczy tylko, że zmienisz plikowi **local_settings.py.example** nazwę na  **local_settings.py** 
-i uzupełnisz go.
+Open terminal in ```manage.py``` directory and type ```python manage.py migrate```.
+After that, fill database using ```python manage.py loaddata jedzonko``` , finally you can start server by ```python manage.py runserver``` command.
 
---- 
+### Preview
+## Landing Page:
 
-Jeśli wszystko skonfigurowałeś poprawnie, to pod adresem http://localhost:8000/index zobaczysz przykładową stronę.
+![Landing](https://github.com/zooyl/Jedzonko-ScrumProject/blob/master/preview/LandingPage.png?raw=true)
+
+## Dashboard:
+
+![Dashboard](https://github.com/zooyl/Jedzonko-ScrumProject/blob/master/preview/Dashboard.png?raw=true)
+
+## Recipes List:
+
+![List](https://github.com/zooyl/Jedzonko-ScrumProject/blob/master/preview/ListaPrzepisow.png?raw=true)
+
+## Authors
+
+* **[MaciejKwiecinski](https://github.com/MaciejKwiecinski)**
+* **[Utosz](https://github.com/utosz)**
+* **[Zooyl](https://github.com/zooyl)**
+
+## Built With
+
+* [Django](https://www.djangoproject.com/) - The web framework used
